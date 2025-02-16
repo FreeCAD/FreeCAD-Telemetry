@@ -74,14 +74,4 @@ def init_sentry(dsn):
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for tracing.
         traces_sample_rate=1.0,
-        before_send=before_send,
     )
-
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-    enabled = params.GetBool("Enable", False)
-    if not enabled:
-        FreeCAD.Console.PrintMessage(
-            "Sentry initialized, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
-        )
-    else:
-        FreeCAD.Console.PrintMessage("Sentry initialized. FreeCAD Telemetry sending is active.\n")

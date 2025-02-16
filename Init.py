@@ -28,9 +28,19 @@ from Sentry import init_sentry
 def setup():
     global init_sentry
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-    default_dsn = "https://ff3b28f395e6df9ba8fc4c34e03ffdc7@o4508819774963712.ingest.de.sentry.io/4508819779944528"
-    dsn = params.GetString("DSN", default_dsn)
+    dsn = params.GetString("DSN", "unset")
+    if dsn == "unset":
+        dsn = "https://ff3b28f395e6df9ba8fc4c34e03ffdc7@o4508819774963712.ingest.de.sentry.io/4508819779944528"
+        params.SetString("DSN", dsn)
 
+    enabled = params.GetBool("Enable", True)
+    if not enabled:
+        FreeCAD.Console.PrintMessage(
+            "Sentry initializing, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
+        )
+        dsn = None
+    else:
+        FreeCAD.Console.PrintMessage("Sentry initializing. FreeCAD Telemetry sending is active.\n")
     init_sentry(dsn=dsn)
 
 

@@ -17,7 +17,7 @@
    <item>
     <widget class="Gui::PrefCheckBox" name="enable_check_box">
      <property name="text">
-      <string>Enable</string>
+      <string>Enable Sentry data transmission</string>
      </property>
      <property name="prefEntry" stdset="0">
       <cstring>Enable</cstring>
@@ -32,7 +32,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>DSN</string>
+        <string>Sentry DSN</string>
        </property>
       </widget>
      </item>
