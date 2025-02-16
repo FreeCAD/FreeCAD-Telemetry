@@ -22,11 +22,12 @@
 # ***************************************************************************
 
 import FreeCAD
-from Sentry import init_sentry
+from Sentry import init_sentry, close_sentry_session
 
 
 def setup():
     global init_sentry
+    global close_sentry_session
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     dsn = params.GetString("DSN", "unset")
     if dsn == "unset":

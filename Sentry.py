@@ -75,3 +75,10 @@ def init_sentry(dsn):
         # of transactions for tracing.
         traces_sample_rate=1.0,
     )
+
+    sentry_sdk.get_global_scope().start_session()
+
+
+def close_sentry_session():
+    FreeCAD.Console.PrintMessage("Closing Sentry session\n")
+    sentry_sdk.get_global_scope().start_session()

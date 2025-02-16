@@ -30,6 +30,7 @@ from PySide import QtWidgets
 
 import TelemetryPaths
 import TelemetryPreferences
+from Sentry import close_sentry_session
 
 FreeCADGui.addLanguagePath(TelemetryPaths.language_path)
 FreeCADGui.updateLocale()
@@ -50,6 +51,7 @@ def setup():
     global TelemetryPreferences
     global QtWidgets
     global observer
+    global close_sentry_session
 
     FreeCADGui.addPreferencePage(TelemetryPreferences.TelemetryPreferences, "Telemetry")
     FreeCADGui.addIconPath(TelemetryPaths.icons_path)
@@ -73,6 +75,8 @@ def setup():
 
     # Attach the observer
     params.Attach(observer)
+
+    QtWidgets.QApplication.instance().aboutToQuit.connect(close_sentry_session)
 
 
 class Telemetry(Workbench):
