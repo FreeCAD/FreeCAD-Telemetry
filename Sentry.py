@@ -31,6 +31,7 @@ try:
 except ImportError as e:
     raise RuntimeError("This is a FreeCAD Addon, and should be run from within FreeCAD") from e
 
+
 def before_send(event, _):
     FreeCAD.Console.PrintMessage(f"Sending event to Sentry: {event}\n")
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
@@ -39,6 +40,7 @@ def before_send(event, _):
         FreeCAD.Console.PrintMessage("  -> Send blocked because Telemetry is disabled\n")
         return None  # Drop the event
     return event
+
 
 def init_sentry(dsn):
     global sentry_sdk
@@ -78,6 +80,8 @@ def init_sentry(dsn):
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enable", False)
     if not enabled:
-        FreeCAD.Console.PrintMessage("Sentry initialized, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n")
+        FreeCAD.Console.PrintMessage(
+            "Sentry initialized, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
+        )
     else:
         FreeCAD.Console.PrintMessage("Sentry initialized. FreeCAD Telemetry sending is active.\n")

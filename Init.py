@@ -24,6 +24,7 @@
 import FreeCAD
 from Sentry import init_sentry
 
+
 def setup():
     global init_sentry
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
@@ -31,5 +32,6 @@ def setup():
     dsn = params.GetString("DSN", default_dsn)
 
     init_sentry(dsn=dsn)
+
 
 setup()

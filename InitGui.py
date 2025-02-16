@@ -38,10 +38,12 @@ FreeCADGui.updateLocale()
 # Define an observer class
 class TelemetryParameterObserver:
     def onChange(self, group, name):
-        FreeCAD.Console.PrintWarning (f"Parameter change caught!!\n")
+        FreeCAD.Console.PrintWarning(f"Parameter change caught!!\n")
+
 
 # Create an observer instance
 observer = TelemetryParameterObserver()
+
 
 def setup():
     global TelemetryPaths
@@ -59,10 +61,12 @@ def setup():
         r = QtWidgets.QMessageBox.information(
             None,
             FreeCAD.Qt.translate("Telemetry", "Telemetry Addon Activated"),
-            FreeCAD.Qt.translate("Telemetry",
-                                 "Thank you for installing the Telemetry addon! This addon will "
-                                 "send data about each FreeCAD session to a central Sentry server."
-                                 " It can be disabled in Preferences, or by removing it entirely."),
+            FreeCAD.Qt.translate(
+                "Telemetry",
+                "Thank you for installing the Telemetry addon! This addon will "
+                "send data about each FreeCAD session to a central Sentry server."
+                " It can be disabled in Preferences, or by removing it entirely.",
+            ),
             QtWidgets.QMessageBox.Ok,
         )
         params.SetBool("FirstStart", False)
