@@ -37,7 +37,7 @@
       </widget>
      </item>
      <item>
-      <widget class="Gui::PrefLineEdit" name="lineEdit">
+      <widget class="Gui::PrefLineEdit" name="dsn_line_edit">
        <property name="toolTip">
         <string>Sentry Data Source Name is the URL that session and crash data is sent to. Fill in this field to override the built-in default and send data someplace other than the main FreeCAD Sentry server.</string>
        </property>
