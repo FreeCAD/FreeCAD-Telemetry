@@ -1,0 +1,6 @@
+.DS_Store
+.gitignore
+*.swp
+.idea
+.venv
+__pycache__
