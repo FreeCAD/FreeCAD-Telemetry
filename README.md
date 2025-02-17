@@ -1,10 +1,12 @@
 # FreeCAD Telemetry Addon
 
 This addon sends select telemetry information to a centralized database. When installed, every time you run FreeCAD,
-basic session information is transmitted to let the FreeCAD developers know which versions of FreeCAD are in use.
+basic session information is transmitted to let the FreeCAD developers know which versions of FreeCAD are in use. It
+also sends your current FreeCAD Language setting and your OS information. Finally, a list of the Addons you have
+installed is transmitted.
 
 ## Future plans
-Eventaully if FreeCAD crashes while this addon is running, crash data will automatically be sent to the server.
+Eventually if FreeCAD crashes while this addon is running, crash data will automatically be sent to the server.
 This data **does not** include information about your model or detailed information about your system.
 
 ## Disabling collection

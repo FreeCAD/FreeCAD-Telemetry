@@ -32,7 +32,7 @@ import TelemetryPaths
 import TelemetryPreferences
 
 # from Sentry import close_sentry_session
-from PosthogFC import posthog_shutdown, posthog_launch
+from PosthogFC import posthog_shutdown, posthog_launch, posthog_addon_list
 
 
 FreeCADGui.addLanguagePath(TelemetryPaths.language_path)
@@ -41,6 +41,7 @@ FreeCADGui.updateLocale()
 
 def setup_posthog():
     global posthog_launch
+    global posthog_addon_list
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enable", True)
     if not enabled:
@@ -53,6 +54,7 @@ def setup_posthog():
             "PostHog initializing. FreeCAD launch metrics are being sent.\n"
         )
     posthog_launch()
+    posthog_addon_list()
 
 
 def setup():

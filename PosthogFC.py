@@ -31,6 +31,8 @@ try:
     from posthog import Posthog
 except ImportError as e:
     raise ImportError("Posthog Python package is not installed: pip install posthog") from e
+
+import os
 import platform
 import uuid
 
@@ -41,7 +43,7 @@ posthog = Posthog(
 )
 
 anonymous_id = str(uuid.uuid4())
-posthog.identify(distinct_id=anonymous_id)
+# posthog.identify(distinct_id=anonymous_id)
 
 
 def posthog_launch():
@@ -57,7 +59,7 @@ def posthog_launch():
 
     posthog.capture(
         anonymous_id,
-        event="launch",
+        event="freecad_launch",
         properties={
             "version_major": release[0],
             "version_minor": release[1],
@@ -65,6 +67,25 @@ def posthog_launch():
             "system": platform.system(),
             "system_version": platform.version(),
             "fc_language": current_language,
+            "$process_person_profile": False,  # Do not include person information
+        },
+    )
+
+
+def posthog_addon_list():
+    home_mod = FreeCAD.getUserAppDataDir() + "Mod"
+    home_mod = os.path.realpath(home_mod)
+    mods = []
+    if os.path.isdir(home_mod):
+        mod_dirs = os.listdir(home_mod)
+        for mod_dir in mod_dirs:
+            if not ".backup" in mod_dir and mod_dir[0] != "." and mod_dir != "CVS":
+                mods.append(mod_dir.lower())
+    posthog.capture(
+        anonymous_id,
+        event="freecad_addon_list",
+        properties={
+            "mods": mods,
             "$process_person_profile": False,  # Do not include person information
         },
     )
