@@ -21,28 +21,54 @@
 # *                                                                         *
 # ***************************************************************************
 
-import FreeCAD
-from Sentry import init_sentry, close_sentry_session
+try:
+    import FreeCAD
+    import FreeCADGui
+except ImportError as e:
+    raise RuntimeError("This is a FreeCAD Addon, and should be run from within FreeCAD") from e
+
+try:
+    from posthog import Posthog
+except ImportError as e:
+    raise ImportError("Posthog Python package is not installed: pip install posthog") from e
+import platform
+import uuid
+
+posthog = Posthog(
+    project_api_key="phc_Q9zaBGzSRys31DO8dSp8YepSICY1CJh2xRBUmrbt3Jl",
+    host="https://eu.i.posthog.com",
+    disable_geoip=True,
+)
+
+anonymous_id = str(uuid.uuid4())
+posthog.identify(distinct_id=anonymous_id)
 
 
-def setup_sentry():
-    global init_sentry
-    global close_sentry_session
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-    dsn = params.GetString("DSN", "unset")
-    if dsn == "unset":
-        dsn = "https://ff3b28f395e6df9ba8fc4c34e03ffdc7@o4508819774963712.ingest.de.sentry.io/4508819779944528"
-        params.SetString("DSN", dsn)
+def posthog_launch():
+    """Send launch statistics to Posthog: FreeCAD version and platform"""
+    release = FreeCAD.Version()
+    if release[6] and release[6] != "main":
+        return  # Do not capture information about branches
 
-    enabled = params.GetBool("Enable", True)
-    if not enabled:
-        FreeCAD.Console.PrintMessage(
-            "Sentry initializing, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
-        )
-        dsn = None
-    else:
-        FreeCAD.Console.PrintMessage("Sentry initializing. FreeCAD Telemetry sending is active.\n")
-    init_sentry(dsn=dsn)
+    locale = FreeCADGui.getLocale()
+    current_language = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/General").GetString(
+        "Language", locale
+    )
+
+    posthog.capture(
+        anonymous_id,
+        event="launch",
+        properties={
+            "version_major": release[0],
+            "version_minor": release[1],
+            "version_patch": release[2],
+            "system": platform.system(),
+            "system_version": platform.version(),
+            "fc_language": current_language,
+            "$process_person_profile": False,  # Do not include person information
+        },
+    )
 
 
-# setup_sentry()  # Currently not using Sentry
+def posthog_shutdown():
+    posthog.flush()

@@ -30,28 +30,37 @@ from PySide import QtWidgets
 
 import TelemetryPaths
 import TelemetryPreferences
-from Sentry import close_sentry_session
+
+# from Sentry import close_sentry_session
+from PosthogFC import posthog_shutdown, posthog_launch
+
 
 FreeCADGui.addLanguagePath(TelemetryPaths.language_path)
 FreeCADGui.updateLocale()
 
 
-# Define an observer class
-class TelemetryParameterObserver:
-    def onChange(self, group, name):
-        FreeCAD.Console.PrintWarning(f"Parameter change caught!!\n")
-
-
-# Create an observer instance
-observer = TelemetryParameterObserver()
+def setup_posthog():
+    global posthog_launch
+    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    enabled = params.GetBool("Enable", True)
+    if not enabled:
+        FreeCAD.Console.PrintMessage(
+            "PostHog initializing, but FreeCAD launch metrics sending is disabled: no data will be transmitted\n"
+        )
+        return
+    else:
+        FreeCAD.Console.PrintMessage(
+            "PostHog initializing. FreeCAD launch metrics are being sent.\n"
+        )
+    posthog_launch()
 
 
 def setup():
     global TelemetryPaths
     global TelemetryPreferences
     global QtWidgets
-    global observer
-    global close_sentry_session
+    # global close_sentry_session
+    global posthog_shutdown, setup_posthog
 
     FreeCADGui.addPreferencePage(TelemetryPreferences.TelemetryPreferences, "Telemetry")
     FreeCADGui.addIconPath(TelemetryPaths.icons_path)
@@ -66,17 +75,17 @@ def setup():
             FreeCAD.Qt.translate(
                 "Telemetry",
                 "Thank you for installing the Telemetry addon! This addon will "
-                "send data about each FreeCAD session to a central Sentry server."
+                "send data about each FreeCAD session to a central server."
                 " It can be disabled in Preferences, or by removing it entirely.",
             ),
             QtWidgets.QMessageBox.Ok,
         )
         params.SetBool("FirstStart", False)
 
-    # Attach the observer
-    params.Attach(observer)
+    setup_posthog()
 
-    QtWidgets.QApplication.instance().aboutToQuit.connect(close_sentry_session)
+    # QtWidgets.QApplication.instance().aboutToQuit.connect(close_sentry_session)
+    QtWidgets.QApplication.instance().aboutToQuit.connect(posthog_shutdown)
 
 
 class Telemetry(Workbench):
