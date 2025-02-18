@@ -22,7 +22,7 @@
 # ***************************************************************************
 
 import FreeCAD
-from Sentry import init_sentry, close_sentry_session
+# from Sentry import init_sentry, close_sentry_session
 
 
 def setup_sentry():
