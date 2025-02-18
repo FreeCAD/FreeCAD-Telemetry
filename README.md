@@ -1,9 +1,19 @@
 # FreeCAD Telemetry Addon
 
-This addon sends select FreeCAD usage information to a centralized database. When installed, every time you run
-FreeCAD, the current version of FreeCAD is sent to our telemetry server (current using the PostHog service). This
-is also transmitted when FreeCAD shuts down correctly (e.g. without a crash) to enable us to gather aggregate
-crash statistics about each version of FreeCAD.
+This addon sends select FreeCAD usage information to a centralized database.
+
+# How does telemetry help the FreeCAD project?
+
+FreeCAD developers are often faced with competing priorities: for example, which bugs to prioritize fixing. One
+way of making decisions is to estimate how many people are affected by a given bug, or are running an Addon that
+may be affected by an API change, etc. In order to better focus limited resources, we want to gather a picture
+of how FreeCAD is being used.
+
+# What data is sent?
+
+When installed, every time you run FreeCAD, the current version of FreeCAD is sent to our telemetry server
+(current using the PostHog service). This is also transmitted when FreeCAD shuts down correctly (e.g. without a
+crash) to enable us to gather aggregate crash statistics about each version of FreeCAD.
 
 In addition, three other categories of information are usually sent, but can be disabled on a per-category basis.
 
@@ -29,7 +39,6 @@ The output of the following Python commands:
 * platform.system()
 * platform.version()
 * platform.python_version()
-
 
 ## Future plans
 Eventually if FreeCAD crashes while this addon is running, crash data will automatically be sent to the server.
