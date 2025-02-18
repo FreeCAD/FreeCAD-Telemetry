@@ -29,7 +29,7 @@ import os
 from PySide import QtWidgets, QtCore
 
 import TelemetryPaths
-from Sentry import init_sentry
+# from Sentry import init_sentry
 
 
 class TelemetryPreferences:
