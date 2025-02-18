@@ -22,6 +22,7 @@
 # ***************************************************************************
 
 import FreeCAD
+
 # from Sentry import init_sentry, close_sentry_session
 
 
