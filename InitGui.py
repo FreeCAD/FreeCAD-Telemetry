@@ -54,7 +54,6 @@ def setup_posthog():
             "PostHog initializing. FreeCAD launch metrics are being sent.\n"
         )
     posthog_launch()
-    posthog_addon_list()
 
 
 def setup():

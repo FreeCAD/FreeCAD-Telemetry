@@ -39,31 +39,64 @@ class TelemetryPreferences:
         self.form = FreeCADGui.PySideUic.loadUi(
             os.path.join(TelemetryPaths.panels_path, "preferences.ui")
         )
-        self.form.dsn_line_edit.textEdited.connect(self._dsn_changed)
+        # Don't need the next line until we choose to start using Sentry for crash reporting
+        # self.form.dsn_line_edit.textEdited.connect(self._dsn_changed)
         if hasattr(self.form.enable_check_box, "checkStateChanged"):
             # With Qt 6.7 the original stateChanged was deprecated and changed to checkStateChanged
             self.form.enable_check_box.checkStateChanged.connect(self._enable_check_state_changed)
         else:
             self.form.enable_check_box.stateChanged.connect(self._enable_check_state_changed)
-        self.form.dsn_line_edit.textEdited.connect(self._dsn_changed)
 
     def saveSettings(self):
         """Required function: called by the preferences dialog when Apply or Save is clicked,
         saves out the preference data by reading it from the widgets."""
         params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-        params.SetBool(
-            "Enable", 1 if self.form.enable_check_box.checkState() == QtCore.Qt.Checked else 0
-        )
+        params.SetBool("Enable", self.form.enable_check_box.isChecked())
+        params.SetBool("SendSystemInformation", self.form.system_check_box.isChecked())
+        params.SetBool("SendAddonInformation", self.form.addons_check_box.isChecked())
+        params.SetBool("SendPreferences", self.form.preferences_check_box.isChecked())
         params.SetString("DSN", self.form.dsn_line_edit.text())
+        params.SetString("PostHogURL", self.form.posthog_url_line_edit.text())
+        params.SetString("PostHogAPIKey", self.form.posthog_api_key_line_edit.text())
+        # self._reset_sentry()  # If we start using Sentry, uncomment
 
     def loadSettings(self):
         """Required function: called by the preferences dialog when it is launched,
         loads the preference data and assigns it to the widgets."""
         params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
         enable = params.GetBool("Enable", True)
+        system = params.GetBool("SendSystemInformation", True)
+        addon = params.GetBool("SendAddonInformation", True)
+        preferences = params.GetBool("SendPreferences", True)
+        host = params.GetString("PostHogURL", "https://eu.i.posthog.com")
+        api_key = params.GetString(
+            "PostHogAPIKey", "phc_Q9zaBGzSRys31DO8dSp8YepSICY1CJh2xRBUmrbt3Jl"
+        )
         dsn = params.GetString("DSN", "unset")
         self.form.enable_check_box.setChecked(enable)
         self.form.dsn_line_edit.setText(dsn)
+        self.form.posthog_url_line_edit.setText(host)
+        self.form.posthog_api_key_line_edit.setText(api_key)
+        self.form.system_check_box.setChecked(system)
+        self.form.addons_check_box.setChecked(addon)
+        self.form.preferences_check_box.setChecked(preferences)
+
+    def _enable_check_state_changed(self, check_state):
+        """Update the enable state of the sub-widgets"""
+        if check_state == QtCore.Qt.Checked:
+            self.form.dsn_line_edit.setEnabled(True)
+            self.form.posthog_url_line_edit.setEnabled(True)
+            self.form.posthog_api_key_line_edit.setEnabled(True)
+            self.form.addons_check_box.setEnabled(True)
+            self.form.system_check_box.setEnabled(True)
+            self.form.preferences_check_box.setEnabled(True)
+        else:
+            self.form.dsn_line_edit.setEnabled(False)
+            self.form.posthog_url_line_edit.setEnabled(False)
+            self.form.posthog_api_key_line_edit.setEnabled(False)
+            self.form.addons_check_box.setEnabled(False)
+            self.form.system_check_box.setEnabled(False)
+            self.form.preferences_check_box.setEnabled(False)
 
     def _dsn_changed(self, text):
         """Update the DSN in the FreeCAD parameters."""
@@ -71,12 +104,6 @@ class TelemetryPreferences:
         params.SetString("DSN", text)
         init_sentry(text)
         FreeCAD.Console.PrintMessage(f"Telemetry is now being sent to {text}\n")
-        self._reset_sentry()
-
-    def _enable_check_state_changed(self, check_state):
-        """Update the enable state in the FreeCAD parameters."""
-        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-        params.SetBool("Enable", 1 if check_state == QtCore.Qt.Checked else 0)
         self._reset_sentry()
 
     def _reset_sentry(self):

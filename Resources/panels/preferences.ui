@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>305</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,11 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="Gui::PrefCheckBox" name="enable_check_box">
+     <property name="toolTip">
+      <string>Globally enable or disable all telemetry: if disabled, no data is sent</string>
+     </property>
      <property name="text">
-      <string>Enable Sentry data transmission</string>
+      <string>Enable telemetry</string>
      </property>
      <property name="prefEntry" stdset="0">
       <cstring>Enable</cstring>
@@ -28,28 +31,114 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Sentry DSN</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Gui::PrefLineEdit" name="dsn_line_edit">
-       <property name="toolTip">
-        <string>Sentry Data Source Name is the URL that session and crash data is sent to. Fill in this field to override the built-in default and send data someplace other than the main FreeCAD Sentry server.</string>
-       </property>
-       <property name="prefEntry" stdset="0">
-        <cstring>DSN</cstring>
-       </property>
-       <property name="prefPath" stdset="0">
-        <cstring>Mod/Telemetry</cstring>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Metrics to send</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="Gui::PrefCheckBox" name="system_check_box">
+        <property name="toolTip">
+         <string>Allow sending OS, version, and system architecture information</string>
+        </property>
+        <property name="text">
+         <string>System information (processor, OS, etc.)</string>
+        </property>
+        <property name="prefEntry" stdset="0">
+         <cstring>SendSystemInformation</cstring>
+        </property>
+        <property name="prefPath" stdset="0">
+         <cstring>Mod/Telemetry</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Gui::PrefCheckBox" name="preferences_check_box">
+        <property name="toolTip">
+         <string>Allow sending language, theme, navigation style, and related preferences settings</string>
+        </property>
+        <property name="text">
+         <string>Basic preferences settings (language, theme, etc.)</string>
+        </property>
+        <property name="prefEntry" stdset="0">
+         <cstring>SendPreferences</cstring>
+        </property>
+        <property name="prefPath" stdset="0">
+         <cstring>Mod/Telemetry</cstring>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Gui::PrefCheckBox" name="addons_check_box">
+        <property name="toolTip">
+         <string>Allow sending a list of installed Addons</string>
+        </property>
+        <property name="text">
+         <string>Addon list</string>
+        </property>
+        <property name="prefEntry" stdset="0">
+         <cstring>SendAddonInformation</cstring>
+        </property>
+        <property name="prefPath" stdset="0">
+         <cstring>Mod/Telemetry</cstring>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Advanced</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="posthog_url_line_edit">
+        <property name="toolTip">
+         <string>The URL data is sent to. Note that if you change this, the data is no longer sent to the FreeCAD project</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="posthog_label">
+        <property name="text">
+         <string>PostHog URL</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Sentry DSN</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="Gui::PrefLineEdit" name="dsn_line_edit">
+        <property name="toolTip">
+         <string>Sentry Data Source Name is the URL that session and crash data is sent to. Fill in this field to override the built-in default and send data someplace other than the main FreeCAD Sentry server.</string>
+        </property>
+        <property name="prefEntry" stdset="0">
+         <cstring>DSN</cstring>
+        </property>
+        <property name="prefPath" stdset="0">
+         <cstring>Mod/Telemetry</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>PostHog API Key</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="posthog_api_key_line_edit"/>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
