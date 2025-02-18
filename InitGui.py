@@ -24,6 +24,7 @@
 import FreeCAD
 import FreeCADGui
 
+from datetime import datetime, timedelta
 import os
 
 from PySide import QtWidgets
@@ -62,6 +63,7 @@ def setup():
     global QtWidgets
     # global close_sentry_session
     global posthog_shutdown, setup_posthog
+    global is_more_than_30_days_ago
 
     FreeCADGui.addPreferencePage(TelemetryPreferences.TelemetryPreferences, "Telemetry")
     FreeCADGui.addIconPath(TelemetryPaths.icons_path)
@@ -83,11 +85,20 @@ def setup():
         )
         params.SetBool("FirstStart", False)
 
-    setup_posthog()
+    last_send = params.GetString("LastSendTime", "never")
+    sending_permitted = last_send == "never" or is_more_than_30_days_ago(last_send)
+    if sending_permitted:
+        # We only send data once every 30 days
+        params.SetString("LastSendTime", datetime.now().isoformat())
+        setup_posthog()
+        QtWidgets.QApplication.instance().aboutToQuit.connect(posthog_shutdown)
 
-    # QtWidgets.QApplication.instance().aboutToQuit.connect(close_sentry_session)
-    QtWidgets.QApplication.instance().aboutToQuit.connect(posthog_shutdown)
-
+def is_more_than_30_days_ago(iso_time_str:str) -> bool:
+    global timedelta
+    # Convert ISO 8601 string to a datetime object
+    given_time = datetime.fromisoformat(iso_time_str)
+    now = datetime.now()
+    return (now - given_time) > timedelta(days=30)
 
 class Telemetry(Workbench):
     """Telemetry is not *really* a workbench, so this class is basically empty."""
