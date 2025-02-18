@@ -83,6 +83,9 @@ def posthog_fc_version(tag):
     """Send FreeCAD version to Posthog"""
     global posthog
     release = FreeCAD.Version()
+    screen = FreeCADGui.getMainWindow().screen()
+    screen_size = screen.availableSize()
+
     posthog.capture(
         anonymous_id,
         event="freecad_version",
@@ -91,6 +94,8 @@ def posthog_fc_version(tag):
             "version_major": release[0],
             "version_minor": release[1],
             "version_patch": release[2],
+            "screen_resolution": f"{screen_size.width()}x{screen_size.height()}",
+            "screen_dpi": screen.devicePixelRatio(),
             "$process_person_profile": False,  # Do not include person information
         },
     )
