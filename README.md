@@ -39,6 +39,8 @@ The output of the following Python commands:
 * platform.system()
 * platform.version()
 * platform.python_version()
+* FreeCADGui.getMainWindow().screen().availableSize()
+* FreeCADGui.getMainWindow().screen().devicePixelRatio()
 
 ## Future plans
 Eventually if FreeCAD crashes while this addon is running, crash data will automatically be sent to the server.
