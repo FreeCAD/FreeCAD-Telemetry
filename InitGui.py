@@ -93,12 +93,14 @@ def setup():
         setup_posthog()
         QtWidgets.QApplication.instance().aboutToQuit.connect(posthog_shutdown)
 
-def is_more_than_30_days_ago(iso_time_str:str) -> bool:
+
+def is_more_than_30_days_ago(iso_time_str: str) -> bool:
     global timedelta
     # Convert ISO 8601 string to a datetime object
     given_time = datetime.fromisoformat(iso_time_str)
     now = datetime.now()
     return (now - given_time) > timedelta(days=30)
+
 
 class Telemetry(Workbench):
     """Telemetry is not *really* a workbench, so this class is basically empty."""
