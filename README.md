@@ -30,7 +30,9 @@ These are just examples and it is important to understand that we will never sel
 
 # What data is sent?
 
-Telemetry data is selected to be non-identifying.  Nothing sent is personally identifying.
+Telemetry data is selected to be non-identifying.  Nothing sent is personally identifying: upon installation of the
+Addon you are automatically assigned a random UUID that can be used to request data removal if you later choose
+not to participat in the Telemetry project.
 
 When installed, every time you run FreeCAD, the current version of FreeCAD is sent to our telemetry server
 (current using the PostHog service). This is also transmitted when FreeCAD shuts down correctly (e.g. without a
@@ -74,6 +76,13 @@ You can disable this data reporting by removing the Addon via the Addon Manager,
 from your FreeCAD Mod directory, or temporarily by unchecking "Enabled" in the Telemetry Addon's preferences. You
 may also individually uncheck the categories described above if you are not comfortable sending the listed data, but
 still wish to participate in the overall metrics program.
+
+## Requesting removal of data
+
+In the Telemetry Addon preferences your UUID is displayed. To request that your data be removed from our telemetry
+collection, click the button next to it to engage an automated process, or send a removal request with that UUID to
+telemetry@freecad.org. This will not affect your use of FreeCAD in any way, nor cancel any other online accounts you
+may have: those accounts are not tied in any way to the generated UUID.
 
 ## Who has access to the data?
 
