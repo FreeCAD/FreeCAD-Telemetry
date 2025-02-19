@@ -32,6 +32,7 @@ try:
 except ImportError as e:
     raise ImportError("Posthog Python package is not installed: pip install posthog") from e
 
+from datetime import datetime
 import os
 import platform
 import uuid
@@ -87,6 +88,7 @@ def posthog_launch():
             "Telemetry Addon: Sending FreeCAD preferences info to Posthog\n"
         )
         posthog_preferences()
+    params.SetString("LastSendTime", datetime.now().isoformat())
 
 
 def posthog_fc_startup():

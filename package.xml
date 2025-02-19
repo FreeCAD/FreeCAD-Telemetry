@@ -2,8 +2,8 @@
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
   <name>Telemetry</name>
   <description>Help improve FreeCAD by sending basic metrics to the development team.</description>
-  <version>0.2</version>
-  <date>2025-02-18</date>
+  <version>1.0.0beta</version>
+  <date>2025-02-19</date>
   <maintainer email="chennes@freecad.org">Chris Hennes</maintainer>
   <license file="LICENSE">LGPL-2.1-or-later</license>
   <url type="repository" branch="main">https://github.com/FreeCAD/FreeCAD-Telemetry</url>

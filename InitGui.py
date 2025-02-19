@@ -71,20 +71,23 @@ def setup():
     first_start = params.GetBool("FirstStart", True)
 
     if first_start:
-        r = QtWidgets.QMessageBox.information(
-            None,
-            FreeCAD.Qt.translate("Telemetry", "Telemetry Addon Activated"),
-            FreeCAD.Qt.translate(
-                "Telemetry",
-                "Thank you for installing the Telemetry addon! This addon will "
-                "send data about each FreeCAD session to a central server."
-                " It can be disabled in Preferences, or by removing it entirely.",
-            ),
-            QtWidgets.QMessageBox.Ok,
+        dialog = FreeCADGui.PySideUic.loadUi(
+            os.path.join(TelemetryPaths.panels_path, "first_start.ui")
         )
+        dialog.exec()
+
+        enabled = dialog.settings_group_box.isChecked()
+        addons_enabled = dialog.addon_checkbox.isChecked()
+        preferences_enabled = dialog.preferences_checkbox.isChecked()
+        system_enabled = dialog.system_checkbox.isChecked()
+
+        params.SetBool("Enable", enabled)
+        params.SetBool("SendAddonInformation", addons_enabled)
+        params.SetBool("SendPreferences", preferences_enabled)
+        params.SetBool("SendSystemInformation", system_enabled)
+
         params.SetBool("FirstStart", False)
 
-    params.SetString("LastSendTime", datetime.now().isoformat())
     setup_posthog()
     QtWidgets.QApplication.instance().aboutToQuit.connect(posthog_shutdown)
 
