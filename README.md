@@ -2,14 +2,35 @@
 
 This addon sends select FreeCAD usage information to a centralized database.
 
-# How does telemetry help the FreeCAD project?
+# Why you should share telemetry with the FreeCAD project?
 
-FreeCAD developers are often faced with competing priorities: for example, which bugs to prioritize fixing. One
-way of making decisions is to estimate how many people are affected by a given bug, or are running an Addon that
-may be affected by an API change, etc. In order to better focus limited resources, we want to gather a picture
-of how FreeCAD is being used.
+FreeCAD is a community project.  We freely contribute our time and money to make the software as good as possible for the largest number of users.
+Contributing data is another way of supporting the project.
+
+Sharing telemetry with FreeCAD helps the project leaders and developers make a better solution for everyone and allocate donations responsibly.
+Without good data, it is difficult to make good decisions between competing priorities: for example, which bugs to prioritize fixing.  
+Without good data, forum discussions become anecdotal and emotional.  
+
+Good data solves many problems.
+
+Our telemetry is intended to help us understand how many people are affected by our decisions.  For example:
+
+- How many people are affected by a given bug
+- How many people are running an Addon that may be affected by an API change
+- How many people are using a specific translation and would benefit from improving it
+- How long should we maintain support and documentation for older releases
+
+The telemetry also helps us fine tune the user experience to benefit the largest number of users with default settings:
+
+- What are the most popular unit schemas, themes
+- Do addons contain features that should be in the core experience
+- Which platforms are the most popular and should receive the most development support
+
+These are just examples and it is important to understand that we will never sell data to third parties and will not use the data to market products or services to you.
 
 # What data is sent?
+
+Telemetry data is selected to be non-identifying.  Nothing sent is personally identifying.
 
 When installed, every time you run FreeCAD, the current version of FreeCAD is sent to our telemetry server
 (current using the PostHog service). This is also transmitted when FreeCAD shuts down correctly (e.g. without a
