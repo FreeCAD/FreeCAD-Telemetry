@@ -152,7 +152,7 @@ class TelemetryPreferences:
         # Temp error string
         error_string = FreeCAD.Qt.translate(
             "Telemetry",
-            "This feature is currently unimplemented while this Addon is in Beta. Contact chennes@freecad.org to remove UUID {}",
+            "This feature is currently unimplemented while this Addon is in Beta. Contact telemetry@freecad.org to request removal of UUID {}",
         ).format(uuid)
 
         # Real error string

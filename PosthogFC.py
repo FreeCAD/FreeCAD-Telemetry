@@ -46,6 +46,9 @@ def posthog_launch():
     """Send statistics to Posthog based on user preferences settings"""
     release = FreeCAD.Version()
     if release[6] and release[6] != "main":
+        FreeCAD.Console.PrintMessage(
+            f"Telemetry Addon: You are on branch {release[6]}, so no data will be sent.\n"
+        )
         return  # Do not capture information about branches
 
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
@@ -71,7 +74,8 @@ def posthog_launch():
     preferences = params.GetBool("SendPreferences", True)
 
     FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD version data to Posthog\n")
-    posthog_fc_version("startup")
+    posthog_fc_startup()
+    posthog_fc_version()
     if system:
         FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD system info to Posthog\n")
         posthog_system_info()
@@ -85,24 +89,28 @@ def posthog_launch():
         posthog_preferences()
 
 
-def posthog_fc_version(tag):
+def posthog_fc_startup():
+    global posthog
+    posthog.capture(posthog_id, event="freecad_startup")
+
+
+def posthog_fc_shutdown():
+    global posthog
+    posthog.capture(posthog_id, event="freecad_shutdown")
+
+
+def posthog_fc_version():
     """Send FreeCAD version to Posthog"""
     global posthog
     release = FreeCAD.Version()
-    screen = FreeCADGui.getMainWindow().screen()
-    screen_size = screen.availableSize()
 
     posthog.capture(
         posthog_id,
         event="freecad_version",
         properties={
-            "tag": tag,  # Should be either "startup" or "shutdown", used to track crashes
             "version_major": release[0],
             "version_minor": release[1],
             "version_patch": release[2],
-            "screen_resolution": f"{screen_size.width()}x{screen_size.height()}",
-            "screen_dpi": screen.devicePixelRatio(),
-            "$process_person_profile": False,  # Do not include person information
         },
     )
 
@@ -110,6 +118,8 @@ def posthog_fc_version(tag):
 def posthog_system_info():
     """Send FreeCAD system information to Posthog"""
     global posthog
+    screen = FreeCADGui.getMainWindow().screen()
+    screen_size = screen.availableSize()
     posthog.capture(
         posthog_id,
         event="freecad_system_info",
@@ -118,7 +128,8 @@ def posthog_system_info():
             "system": platform.system(),
             "system_version": platform.version(),
             "python_version": platform.python_version(),
-            "$process_person_profile": False,  # Do not include person information
+            "screen_resolution": f"{screen_size.width()}x{screen_size.height()}",
+            "screen_dpi": screen.devicePixelRatio(),
         },
     )
 
@@ -160,7 +171,6 @@ def posthog_addon_list():
         event="freecad_addon_list",
         properties={
             "mods": mods,
-            "$process_person_profile": False,  # Do not include person information
         },
     )
 
@@ -170,5 +180,5 @@ def posthog_shutdown():
     enabled = params.GetBool("Enabled", True)
     if enabled and posthog:
         FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD shutdown info to Posthog\n")
-        posthog_fc_version("shutdown")
+        posthog_fc_shutdown()
         posthog.flush()
