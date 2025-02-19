@@ -143,41 +143,6 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="uuid_field_label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string notr="true"/>
-       </property>
-       <property name="text">
-        <string notr="true">UUID: </string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="uuid_label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>This is your unique identifier. You will need it to request that your data be removed from our database.</string>
-       </property>
-       <property name="text">
-        <string>id_string_here</string>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::TextInteractionFlag::LinksAccessibleByMouse|Qt::TextInteractionFlag::TextSelectableByMouse</set>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="request_data_removal_pushbutton">
        <property name="text">
         <string>Request data removal...</string>

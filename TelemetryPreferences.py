@@ -85,7 +85,6 @@ class TelemetryPreferences:
         self.form.system_check_box.setChecked(system)
         self.form.addons_check_box.setChecked(addon)
         self.form.preferences_check_box.setChecked(preferences)
-        self.form.uuid_label.setText(uuid)
         self._enable_check_state_changed(QtCore.Qt.Checked if enable else QtCore.Qt.Unchecked)
 
     def _enable_check_state_changed(self, check_state):
@@ -149,29 +148,26 @@ class TelemetryPreferences:
                 "No UUID was found in your FreeCAD Telemetry settings, so there is no data to remove",
             )
 
-        # Temp error string
+        # Real error string
         error_string = FreeCAD.Qt.translate(
             "Telemetry",
-            "This feature is currently unimplemented while this Addon is in Beta. Contact telemetry@freecad.org to request removal of UUID {}",
+            "There was a problem removing your user data: please contact telemetry@freecad.org to request removal of UUID {}",
         ).format(uuid)
 
-        # Real error string
-        # error_string = FreeCAD.Qt.translate(
-        #                "There was a problem removing your user data: please contact the FreeCAD team directly to request removal of UUID {}").format(
-        #                uuid)
-
-        url = "https://freecad.org/telemetry/remove_user_data"
-        data = json.dumps({"uuid": uuid}).encode("utf-8")  # Convert to bytes
-        headers = {"Content-Type": "application/json"}
-
-        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+        url = f"https://www.freecad.org/deletetelemetry.php?person_id={uuid}"
+        req = urllib.request.Request(url, method="DELETE")
         try:
             with urllib.request.urlopen(req) as response:
-                if response.status == 200:
+                if 200 <= response.status < 300:
                     return True, FreeCAD.Qt.translate(
                         "Telemetry", "Your user data was successfully removed from the database."
                     )
                 else:
+                    FreeCAD.Console.PrintMessage(
+                        f"Received a {response.status} response to our request\n"
+                    )
+                    FreeCAD.Console.PrintError(response.read() + "\n")
                     return False, error_string
         except urllib.request.HTTPError as e:
+            FreeCAD.Console.PrintMessage(str(e) + "\n")
             return False, error_string
