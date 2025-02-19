@@ -37,11 +37,12 @@ import platform
 import uuid
 
 posthog = None
-anonymous_id = str(uuid.uuid4())  # Random per session
+posthog_id = None
 
 
 def posthog_launch():
     global posthog
+    global posthog_id
     """Send statistics to Posthog based on user preferences settings"""
     release = FreeCAD.Version()
     if release[6] and release[6] != "main":
@@ -51,6 +52,11 @@ def posthog_launch():
     enabled = params.GetBool("Enabled", True)
     if not enabled:
         return  # Addon is disabled, send nothing
+
+    posthog_id = params.GetString("PostHogUUID", "unset")
+    if posthog_id == "unset":
+        posthog_id = str(uuid.uuid4())
+        params.SetString("PostHogUUID", posthog_id)
 
     posthog = Posthog(
         project_api_key=params.GetString(
@@ -87,7 +93,7 @@ def posthog_fc_version(tag):
     screen_size = screen.availableSize()
 
     posthog.capture(
-        anonymous_id,
+        posthog_id,
         event="freecad_version",
         properties={
             "tag": tag,  # Should be either "startup" or "shutdown", used to track crashes
@@ -105,7 +111,7 @@ def posthog_system_info():
     """Send FreeCAD system information to Posthog"""
     global posthog
     posthog.capture(
-        anonymous_id,
+        posthog_id,
         event="freecad_system_info",
         properties={
             "machine": platform.machine(),
@@ -125,7 +131,7 @@ def posthog_preferences():
     units = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Units")
 
     posthog.capture(
-        anonymous_id,
+        posthog_id,
         event="freecad_preferences",
         properties={
             "language": general.GetString("Language", FreeCADGui.getLocale()),
@@ -150,7 +156,7 @@ def posthog_addon_list():
             if not ".backup" in mod_dir and mod_dir[0] != "." and mod_dir != "CVS":
                 mods.append(mod_dir.lower())
     posthog.capture(
-        anonymous_id,
+        posthog_id,
         event="freecad_addon_list",
         properties={
             "mods": mods,

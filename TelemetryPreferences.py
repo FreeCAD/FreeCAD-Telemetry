@@ -24,7 +24,9 @@
 import FreeCAD
 import FreeCADGui
 
+import json
 import os
+import urllib.request
 
 from PySide import QtWidgets, QtCore
 
@@ -47,6 +49,7 @@ class TelemetryPreferences:
             self.form.enable_check_box.checkStateChanged.connect(self._enable_check_state_changed)
         else:
             self.form.enable_check_box.stateChanged.connect(self._enable_check_state_changed)
+        self.form.request_data_removal_pushbutton.clicked.connect(self._data_removal_clicked)
 
     def saveSettings(self):
         """Required function: called by the preferences dialog when Apply or Save is clicked,
@@ -73,6 +76,7 @@ class TelemetryPreferences:
         api_key = params.GetString(
             "PostHogAPIKey", "phc_Q9zaBGzSRys31DO8dSp8YepSICY1CJh2xRBUmrbt3Jl"
         )
+        uuid = params.GetString("PostHogUUID", "unset")
         dsn = params.GetString("DSN", "unset")
         self.form.enable_check_box.setChecked(enable)
         self.form.dsn_line_edit.setText(dsn)
@@ -81,6 +85,8 @@ class TelemetryPreferences:
         self.form.system_check_box.setChecked(system)
         self.form.addons_check_box.setChecked(addon)
         self.form.preferences_check_box.setChecked(preferences)
+        self.form.uuid_label.setText(uuid)
+        self._enable_check_state_changed(QtCore.Qt.Checked if enable else QtCore.Qt.Unchecked)
 
     def _enable_check_state_changed(self, check_state):
         """Update the enable state of the sub-widgets"""
@@ -99,20 +105,73 @@ class TelemetryPreferences:
             self.form.system_check_box.setEnabled(False)
             self.form.preferences_check_box.setEnabled(False)
 
-    def _dsn_changed(self, text):
-        """Update the DSN in the FreeCAD parameters."""
-        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-        params.SetString("DSN", text)
-        init_sentry(text)
-        FreeCAD.Console.PrintMessage(f"Telemetry is now being sent to {text}\n")
-        self._reset_sentry()
+    #    def _dsn_changed(self, text):
+    #        """Update the DSN in the FreeCAD parameters."""
+    #        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    #        params.SetString("DSN", text)
+    #        init_sentry(text)
+    #        FreeCAD.Console.PrintMessage(f"Telemetry is now being sent to {text}\n")
+    #        self._reset_sentry()
 
-    def _reset_sentry(self):
-        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-        if params.GetBool("Enable", True):
-            dsn = params.GetString("DSN", "unset")
-            FreeCAD.Console.PrintMessage(f"Resetting Sentry to use DSN {dsn}\n")
-            init_sentry(dsn=dsn)
-        else:
-            FreeCAD.Console.PrintMessage(f"Deactivating Sentry (setting dsn=None)\n")
-            init_sentry(dsn=None)
+    #    def _reset_sentry(self):
+    #        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    #        if params.GetBool("Enable", True):
+    #            dsn = params.GetString("DSN", "unset")
+    #            FreeCAD.Console.PrintMessage(f"Resetting Sentry to use DSN {dsn}\n")
+    #            init_sentry(dsn=dsn)
+    #        else:
+    #            FreeCAD.Console.PrintMessage(f"Deactivating Sentry (setting dsn=None)\n")
+    #            init_sentry(dsn=None)
+
+    def _data_removal_clicked(self):
+        self.form.enable_check_box.setChecked(False)
+        ok, message = self._remove_user_data()
+        if ok:
+            self.form.uuid_label.setText("unset")
+            FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry").SetString(
+                "PostHogUUID", "unset"
+            )
+        QtWidgets.QMessageBox.information(
+            None,
+            FreeCAD.Qt.translate("Telemetry", "Deletion request response"),
+            message,
+            QtWidgets.QMessageBox.Ok,
+        )
+
+    @staticmethod
+    def _remove_user_data() -> (bool, str):
+        uuid = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry").GetString(
+            "PostHogUUID", "unset"
+        )
+        if uuid == "unset":
+            return False, FreeCAD.Qt.translate(
+                "Telemetry",
+                "No UUID was found in your FreeCAD Telemetry settings, so there is no data to remove",
+            )
+
+        # Temp error string
+        error_string = FreeCAD.Qt.translate(
+            "Telemetry",
+            "This feature is currently unimplemented while this Addon is in Beta. Contact chennes@freecad.org to remove UUID {}",
+        ).format(uuid)
+
+        # Real error string
+        # error_string = FreeCAD.Qt.translate(
+        #                "There was a problem removing your user data: please contact the FreeCAD team directly to request removal of UUID {}").format(
+        #                uuid)
+
+        url = "https://freecad.org/telemetry/remove_user_data"
+        data = json.dumps({"uuid": uuid}).encode("utf-8")  # Convert to bytes
+        headers = {"Content-Type": "application/json"}
+
+        req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req) as response:
+                if response.status == 200:
+                    return True, FreeCAD.Qt.translate(
+                        "Telemetry", "Your user data was successfully removed from the database."
+                    )
+                else:
+                    return False, error_string
+        except urllib.request.HTTPError as e:
+            return False, error_string
