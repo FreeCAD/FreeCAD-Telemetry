@@ -2,18 +2,18 @@
 
 This addon sends select FreeCAD usage information to a centralized database.
 
-# Why you should share telemetry with the FreeCAD project?
+# Why you should share telemetry with the FreeCAD project
 
-FreeCAD is a community project.  We freely contribute our time and money to make the software as good as possible for the largest number of users.
-Contributing data is another way of supporting the project.
+FreeCAD is a community project. We freely contribute our time and money to make the software as good as possible for the
+largest number of users. Contributing data is another way of supporting the project.
 
-Sharing telemetry with FreeCAD helps the project leaders and developers make a better solution for everyone and allocate donations responsibly.
-Without good data, it is difficult to make good decisions between competing priorities: for example, which bugs to prioritize fixing.
-Without good data, forum discussions become anecdotal and emotional.
+Sharing telemetry with FreeCAD helps the project leaders and developers make a better solution for everyone and allocate
+donations responsibly. Without good data, it is difficult to make good decisions between competing priorities: for
+example, which bugs to prioritize fixing. Without good data, forum discussions become anecdotal and emotional.
 
 Good data solves many problems.
 
-Our telemetry is intended to help us understand how many people are affected by our decisions.  For example:
+Our telemetry is intended to help us understand how many people are affected by our decisions. For example:
 
 - How many people are affected by a given bug
 - How many people are running an Addon that may be affected by an API change
@@ -26,11 +26,12 @@ The telemetry also helps us fine tune the user experience to benefit the largest
 - Do addons contain features that should be in the core experience
 - Which platforms are the most popular and should receive the most development support
 
-These are just examples and it is important to understand that we will never sell data to third parties and will not use the data to market products or services to you.
+These are just examples and it is important to understand that we will never sell data to third parties and will not use
+the data to market products or services to you.
 
 # What data is sent?
 
-Telemetry data is selected to be non-identifying.  Nothing sent is personally identifying: upon installation of the
+Telemetry data is selected to be non-identifying. Nothing sent is personally identifying: upon installation of the
 Addon you are automatically assigned a random UUID that can be used to request data removal if you later choose
 not to participate in the Telemetry project.
 
@@ -48,6 +49,7 @@ system.
 ## FreeCAD preferences
 
 The following FreeCAD preferences:
+
 * language
 * theme
 * stylesheet
@@ -58,6 +60,7 @@ The following FreeCAD preferences:
 ## System statistics
 
 The output of the following Python commands:
+
 * platform.machine()
 * platform.system()
 * platform.version()
@@ -66,12 +69,14 @@ The output of the following Python commands:
 * FreeCADGui.getMainWindow().screen().devicePixelRatio()
 
 ## Future plans
+
 Eventually if FreeCAD crashes while this addon is running, crash data will automatically be sent to the server.
 This data **will not** include information about your CAD model or detailed information about your system. No
 data will be added to the collection list without a dialog informing you of the change when the new version
 is first launched.
 
 ## Disabling collection
+
 You can disable this data reporting by removing the Addon via the Addon Manager, by manually deleting the addon
 from your FreeCAD Mod directory, or temporarily by unchecking "Enabled" in the Telemetry Addon's preferences. You
 may also individually uncheck the categories described above if you are not comfortable sending the listed data, but
