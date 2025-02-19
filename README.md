@@ -8,8 +8,8 @@ FreeCAD is a community project.  We freely contribute our time and money to make
 Contributing data is another way of supporting the project.
 
 Sharing telemetry with FreeCAD helps the project leaders and developers make a better solution for everyone and allocate donations responsibly.
-Without good data, it is difficult to make good decisions between competing priorities: for example, which bugs to prioritize fixing.  
-Without good data, forum discussions become anecdotal and emotional.  
+Without good data, it is difficult to make good decisions between competing priorities: for example, which bugs to prioritize fixing.
+Without good data, forum discussions become anecdotal and emotional.
 
 Good data solves many problems.
 
