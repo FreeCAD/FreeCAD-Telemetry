@@ -8,7 +8,7 @@
   <license file="LICENSE.md">LGPL-2.1-or-later</license>
   <url type="repository" branch="main">https://github.com/FreeCAD/FreeCAD-Telemetry</url>
   <url type="readme">https://github.com/FreeCAD/FreeCAD-Telemetry/blob/main/README.md</url>
-  <icon>Resources/icons/SMLogo.svg</icon>
+  <icon>Resources/icons/telemetryLogo.svg</icon>
 
   <content>
     <workbench>
