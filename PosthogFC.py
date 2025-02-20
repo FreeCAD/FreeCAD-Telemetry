@@ -171,9 +171,7 @@ def posthog_addon_list():
     posthog.capture(
         posthog_id,
         event="freecad_addon_list",
-        properties={
-            "mods": mods,
-        },
+        properties={"mods": mods, "total_mods": len(mods)},
     )
 
 
