@@ -90,6 +90,7 @@ class PosthogFCTest(unittest.TestCase):
             instance = MockPosthog.return_value
             args = instance.capture.call_args_list
             expected_events = [
+                "freecad_startup",
                 "freecad_version",
                 "freecad_system_info",
                 "freecad_preferences",
