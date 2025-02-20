@@ -25,6 +25,9 @@
 
 name: Run Python Unit Tests
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
