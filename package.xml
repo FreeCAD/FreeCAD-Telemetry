@@ -4,8 +4,8 @@
   <description>Help improve FreeCAD by sending basic metrics to the development team.</description>
   <version>1.0.0beta</version>
   <date>2025-02-19</date>
-  <maintainer email="chennes@freecad.org">Chris Hennes</maintainer>
-  <license file="LICENSE">LGPL-2.1-or-later</license>
+  <maintainer email="telemetry@freecad.org">The FreeCAD project association AISBL</maintainer>
+  <license file="LICENSE.md">LGPL-2.1-or-later</license>
   <url type="repository" branch="main">https://github.com/FreeCAD/FreeCAD-Telemetry</url>
   <url type="readme">https://github.com/FreeCAD/FreeCAD-Telemetry/blob/main/README.md</url>
   <icon>Resources/icons/SMLogo.svg</icon>
