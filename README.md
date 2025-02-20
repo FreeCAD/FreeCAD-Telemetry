@@ -2,7 +2,8 @@
 
 # FreeCAD Telemetry Addon
 
-This addon sends select FreeCAD usage information to a centralized database.
+This addon sends select FreeCAD usage information to a centralized database. It is still in the beta release stage, but
+you are welcome to test it out. See [Installing Telemetry](#installing-telemetry) below.
 
 # Why you should share telemetry with the FreeCAD project
 
@@ -97,3 +98,15 @@ any other online accounts you may have: those accounts are not tied in any way t
 
 Only FreeCAD's maintainers have access to the raw data, but aggregate data will be made available to the public.
 That is currently a work-in-progress.
+
+# Installing Telemetry
+
+While it is still in beta testing this addon is not in the official FreeCAD addons list. The easiest way to install it
+is to edit the Addon Manager's preferences to add a new custom repository,
+`https://github.com/FreeCAD/FreeCAD-Telemetry` with branch `main`. The Telemetry addon will then be displayed in the
+Addon Manager like normal addons. When installing, it will require the installation of the `posthog` Python package,
+which the Addon Manager will handle.
+
+As an alternative you can install the addon manually by cloning it from its git repository into your
+`{userAppDataDir}/Mod` directory. Use pip to install the contents of the `requirements.txt` file (use the same Python
+interpreter that FreeCAD uses to ensure the requirements are found).
