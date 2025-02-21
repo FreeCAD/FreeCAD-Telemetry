@@ -6,10 +6,8 @@ Sends non-identifying usage information to FreeCAD.
 
 This addon doesn't ship with FreeCAD and is optional.
 
-*If you have the time, please try out this Beta!*
+*If you have the time, please try out this Beta!*  
 *See [Installing Telemetry](#installation) below.*
-
-<br/>
 
 ## Why you should share telemetry with the FreeCAD project
 
@@ -36,8 +34,6 @@ The telemetry also helps us fine tune the user experience to benefit the largest
 
 These are just examples, and it is important to understand that we will never sell data to third parties and will not
 use the data to market products or services to you.
-
-<br/>
 
 ## Shared Data
 
@@ -131,8 +127,6 @@ currently a work-in-progress.
 ### Privacy and GDPR compliance
 
 See our [Privacy Policy](PRIVACY_POLICY.md).
-
-<br/>
 
 ## Installation
 
