@@ -6,7 +6,7 @@ Sends non-identifying usage information to FreeCAD.
 
 This addon doesn't ship with FreeCAD and is optional.
 
-*If you have the time, please try out this Beta!*  
+*If you have the time, please try out this Beta!*
 *See [Installing Telemetry](#installation) below.*
 
 ## Why you should share telemetry with the FreeCAD project
@@ -52,7 +52,7 @@ In addition, three other categories of information are usually sent, but can be 
 
 We may collect the list of names of your installed addons.
 
-This list can be obtained by listing the  contents of the  
+This list can be obtained by listing the  contents of the
 `{UserAppDataDir}/Mod` directory on your system.
 
 ### Preferences
@@ -68,25 +68,25 @@ We may collect a variety of your preferences:
 
 ### System
 
-We may collect system details from the  
+We may collect system details from the
 output of the following Python commands:
 
--   [`platform.machine()`][Python - Machine]  
+-   [`platform.machine()`][Python - Machine]
     ➞ `x86_64`
 
--   [`platform.system()`][Python - System]  
+-   [`platform.system()`][Python - System]
     ➞ `Linux`
 
--   [`platform.version()`][Python - SVersion]  
+-   [`platform.version()`][Python - SVersion]
     ➞ `#45-Ubuntu SMP PREEMPT_DYNAMIC Thu Dec 06 12:50:01 UTC 2024`
 
--   [`platform.python_version()`][Python - PVersion]  
+-   [`platform.python_version()`][Python - PVersion]
     ➞ `3.12.1`
 
--   [`FreeCADGui.getMainWindow().screen().availableSize()`][QT - Size]  
+-   [`FreeCADGui.getMainWindow().screen().availableSize()`][QT - Size]
     ➞ `{ width : 1920 , height : 1080 }`
 
--   [`FreeCADGui.getMainWindow().screen().devicePixelRatio()`][QT - Ratio]  
+-   [`FreeCADGui.getMainWindow().screen().devicePixelRatio()`][QT - Ratio]
     ➞ `1.0`
 
 ### Future plans
