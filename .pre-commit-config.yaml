@@ -6,6 +6,7 @@ repos:
     rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
     hooks:
     -   id: trailing-whitespace
+        args : [ --markdown-linebreak-ext=md ]
     -   id: end-of-file-fixer
     -   id: check-yaml
     -   id: check-added-large-files
