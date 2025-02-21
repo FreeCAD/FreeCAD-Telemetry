@@ -4,7 +4,10 @@
 
 Sends non-identifying usage information to FreeCAD.
 
+This addon doesn't ship with FreeCAD and is optional.
+
 *If you have the time, please try out this Beta!*
+*See [Installing Telemetry](#installation) below.*
 
 <br/>
 
@@ -112,10 +115,22 @@ page to engage an automated process, or send a removal request with your UUID (f
 [telemetry@freecad.org](mailto:telemetry@freecad.org). This will not affect your use of FreeCAD in any way, nor cancel
 any other online accounts you may have: those accounts are not tied in any way to the generated UUID.
 
+### Requesting a copy of your data
+
+To receive a copy of the data associated with your UUID, please send email to
+[telemetry@freecad.org](mailto:telemetry@freecad.org) with your UUID (see instructions in
+[Requesting removal of data](#requesting-removal-of-data)) and your preferred data format (CSV or XLSX).
+
 ### Who has access to the data?
 
-Only FreeCAD's maintainers have access to the raw data, but aggregate data will be made available to the public.
-That is currently a work-in-progress.
+The data is collected by [The FreeCAD project association AISBL](https://fpa.freecad.org/) who stewards the data
+on behalf of all users and developers of FreeCAD. Only FPA officers, FreeCAD's maintainers, and system administrators
+have access to the raw data, but aggregate data will be made available to the public. Publication of the data is
+currently a work-in-progress.
+
+### Privacy and GDPR compliance
+
+See our [Privacy Policy](PRIVACY_POLICY.md).
 
 <br/>
 
