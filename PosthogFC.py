@@ -136,25 +136,72 @@ def posthog_system_info():
     )
 
 
+def get_preference(path: str, type: str, default: any, transform: callable = lambda x: x):
+    group = os.path.dirname(path)
+    name = os.path.basename(path)
+
+    preference_group = FreeCAD.ParamGet(f"User parameter:{group}")
+    getter = getattr(preference_group, f"Get{type.capitalize()}")
+
+    return transform(getter(name, default))
+
+
+class TrackedPreference:
+    @classmethod
+    def string(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="string", default=default, **kwargs)
+
+    @classmethod
+    def bool(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="bool", default=default, **kwargs)
+
+    @classmethod
+    def unsigned(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="unsigned", default=default, **kwargs)
+
+    @classmethod
+    def int(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="int", default=default, **kwargs)
+
+    @classmethod
+    def double(cls, path: str, default: float, **kwargs):
+        return get_preference(path=path, type="double", default=default, **kwargs)
+
+
 def posthog_preferences():
     """Send some basic FreeCAD preferences to Posthog"""
     global posthog
-    general = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/General")
-    main_window = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-    units = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Units")
 
-    posthog.capture(
-        posthog_id,
-        event="freecad_preferences",
-        properties={
-            "language": general.GetString("Language", FreeCADGui.getLocale()),
-            "theme": main_window.GetString("Theme", "unset"),
-            "stylesheet": main_window.GetString("Stylesheet", "unset"),
-            "geometry": main_window.GetString("Geometry", "unset"),
-            "overlay_stylesheet": main_window.GetString("OverlayActiveStyleSheet", "unset"),
-            "default_unit_schema": units.GetInt("UserSchema", 0),
-        },
-    )
+    preferences = {
+        "language": TrackedPreference.string(
+            path="BaseApp/Preferences/General/Language",
+            default=FreeCADGui.getLocale(),
+        ),
+        "theme": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/Theme", default="unset"
+        ),
+        "stylesheet": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/StyleSheet",
+            default="unset",
+        ),
+        "overlay_stylesheet": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/OverlayActiveStyleSheet",
+            default="unset",
+        ),
+        "geometry": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/Geometry",
+            default="unset",
+        ),
+        "overlay_stylesheet": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/OverlayActiveStyleSheet",
+            default="unset",
+        ),
+        "default_unit_schema": TrackedPreference.int(
+            path="BaseApp/Preferences/Units/UserSchema", transform=str, default=0
+        ),
+    }
+
+    posthog.capture(posthog_id, event="freecad_preferences", properties=preferences)
 
 
 def posthog_addon_list():
