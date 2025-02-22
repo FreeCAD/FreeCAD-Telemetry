@@ -271,6 +271,17 @@ def posthog_preferences():
             transform=str,
             default=0,
         ),
+        "navigation_style": TrackedPreference.string(
+            path="BaseApp/Preferences/View/NavigationStyle",
+            default="Gui::CADNavigationStyle",
+        ),
+        "navigation_orbit_style": TrackedPreference.string(
+            path="BaseApp/Preferences/View/OrbitStyle",
+            default=1,
+        ),
+        "navigation_rotation_style": TrackedPreference.string(
+            path="BaseApp/Preferences/View/RotationStyle", default=1
+        ),
         **ui_panel_preferences("Std_TaskView", "Tasks", "ui_task_view"),
         **ui_panel_preferences("Std_TreeView", "Tree view", "ui_tree_view"),
         **ui_panel_preferences("Std_ComboView", "Property view", "ui_property_view"),

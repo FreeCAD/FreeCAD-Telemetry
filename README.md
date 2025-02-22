@@ -81,6 +81,7 @@ We may collect a variety of your preferences:
 	- Which workbenches are enabled
 	- Which workbenches are disabled
 	- Which workbench is the default one
+-   Navigation style (model, orbit style and rotation style)
 
 ### System
 
