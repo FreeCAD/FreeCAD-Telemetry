@@ -282,6 +282,10 @@ def posthog_preferences():
         "navigation_rotation_style": TrackedPreference.string(
             path="BaseApp/Preferences/View/RotationStyle", default=1
         ),
+        "ui_toolbar_icon_size": TrackedPreference.int(
+            path="BaseApp/Preferences/General/ToolbarIconSize",
+            default=24,
+        ),
         **ui_panel_preferences("Std_TaskView", "Tasks", "ui_task_view"),
         **ui_panel_preferences("Std_TreeView", "Tree view", "ui_tree_view"),
         **ui_panel_preferences("Std_ComboView", "Property view", "ui_property_view"),

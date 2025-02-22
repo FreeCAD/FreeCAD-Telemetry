@@ -72,6 +72,7 @@ We may collect a variety of your preferences:
 	- If Auto horizontal / vertical tool is enabled
 -   Selected UI settings:
 	- Workbench selector type used
+	- Toolbar icon size
 -   Panel (Task View, Tree View etc) settings:
 	- If panel is enabled
 	- If it is placed in overlay mode, if so where
