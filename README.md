@@ -65,6 +65,11 @@ We may collect a variety of your preferences:
 -   Window geometry
 -   Overlay stylesheet
 -   Default unit schema
+-   Selected sketcher settings:
+	- Dimensioning tool preference
+	- On-View Parameters preference
+	- If Unified Coincident and PointOnObject constraint is enabled
+	- If Auto horizontal / vertical tool is enabled
 
 ### System
 

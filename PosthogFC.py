@@ -199,6 +199,27 @@ def posthog_preferences():
         "default_unit_schema": TrackedPreference.int(
             path="BaseApp/Preferences/Units/UserSchema", transform=str, default=0
         ),
+        "sketcher_dimension_single_tool": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/dimensioning/SingleDimensioningTool",
+            default=True,
+        ),
+        "sketcher_dimension_separate_tools": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/dimensioning/SeparatedDimensioningTools",
+            default=False,
+        ),
+        "sketcher_constraint_unified_coincident": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/Constraints/UnifiedCoincident",
+            default=True,
+        ),
+        "sketcher_constraint_auto_hor_ver": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/Constraints/AutoHorVer",
+            default=True,
+        ),
+        "sketcher_on_view_parameters": TrackedPreference.int(
+            path="BaseApp/Preferences/Mod/Sketcher/Tools/OnViewParameterVisibility",
+            transform=str,
+            default=1,
+        ),
     }
 
     posthog.capture(posthog_id, event="freecad_preferences", properties=preferences)
