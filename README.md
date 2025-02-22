@@ -70,6 +70,17 @@ We may collect a variety of your preferences:
 	- On-View Parameters preference
 	- If Unified Coincident and PointOnObject constraint is enabled
 	- If Auto horizontal / vertical tool is enabled
+-   Selected UI settings:
+	- Workbench selector type used
+-   Panel (Task View, Tree View etc) settings:
+	- If panel is enabled
+	- If it is placed in overlay mode, if so where
+	- If transparency is enabled
+	- Width/Height of the panel
+-   Workbench preferences:
+	- Which workbenches are enabled
+	- Which workbenches are disabled
+	- Which workbench is the default one
 
 ### System
 

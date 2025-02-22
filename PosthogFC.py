@@ -168,6 +168,38 @@ class TrackedPreference:
         return get_preference(path=path, type="double", default=default, **kwargs)
 
 
+def ui_panel_preferences(name: str, overlay_name: str, prefix: str):
+    def get_overlay_preferences():
+        placements = ["left", "right", "top", "bottom"]
+        for placement in placements:
+            overlay_group = FreeCAD.ParamGet(
+                f"User parameter:BaseApp/MainWindow/DockWindows/Overlay{placement.capitalize()}"
+            )
+            overlay_widgets = overlay_group.GetString("Widgets", "").split(",")
+
+            if overlay_name in overlay_widgets:
+                overlay_preferences = {
+                    "overlay": placement,
+                    "transparent": overlay_group.GetBool("Transparent", False),
+                }
+
+                if placement in ["left", "right"]:
+                    overlay_preferences["width"] = overlay_group.GetInt("Width", 0)
+                else:
+                    overlay_preferences["height"] = overlay_group.GetInt("Height", 0)
+
+                return overlay_preferences
+
+        return {}
+
+    preferences = {
+        "enabled": TrackedPreference.bool(path="BaseApp/MainWindow/DockWindows", default=False),
+        **get_overlay_preferences(),
+    }
+
+    return {f"{prefix}_{name}": preference for name, preference in preferences.items()}
+
+
 def posthog_preferences():
     """Send some basic FreeCAD preferences to Posthog"""
     global posthog
@@ -220,6 +252,30 @@ def posthog_preferences():
             transform=str,
             default=1,
         ),
+        "workbench_enabled_list": TrackedPreference.string(
+            path="BaseApp/Preferences/Workbenches/Ordered",
+            transform=lambda s: s.split(","),
+            default="",
+        ),
+        "workbench_disabled_list": TrackedPreference.string(
+            path="BaseApp/Preferences/Workbenches/Disabled",
+            transform=lambda s: s.split(","),
+            default="",
+        ),
+        "workbench_default": TrackedPreference.string(
+            path="BaseApp/Preferences/General/AutoloadModule",
+            default="",
+        ),
+        "ui_workbench_selector": TrackedPreference.int(
+            path="BaseApp/Preferences/Workbenches/WorkbenchSelectorType",
+            transform=str,
+            default=0,
+        ),
+        **ui_panel_preferences("Std_TaskView", "Tasks", "ui_task_view"),
+        **ui_panel_preferences("Std_TreeView", "Tree view", "ui_tree_view"),
+        **ui_panel_preferences("Std_ComboView", "Property view", "ui_property_view"),
+        **ui_panel_preferences("Std_PythonView", "Python console", "ui_python_console"),
+        **ui_panel_preferences("Std_ReportView", "Report view", "ui_report_view"),
     }
 
     posthog.capture(posthog_id, event="freecad_preferences", properties=preferences)
