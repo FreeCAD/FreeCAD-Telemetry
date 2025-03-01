@@ -106,6 +106,10 @@ charset-normalizer==3.4.1 \
     --hash=sha256:fd4ec41f914fa74ad1b8304bbc634b3de73d2a0889bd32076342a573e0779e00 \
     --hash=sha256:ffc9202a29ab3920fa812879e95a9e78b2465fd10be7fcbd042899695d75e616
     # via requests
+distro==1.9.0 \
+    --hash=sha256:2fa77c6fd8940f116ee1d6b94a2f90b13b5ea8d019b98bc8bafdcabcdd9bdbed \
+    --hash=sha256:7bffd925d65168f85027d8da9af6bddab658135b840670a223589bc0c8ef02b2
+    # via posthog
 idna==3.10 \
     --hash=sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9 \
     --hash=sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3
@@ -114,8 +118,9 @@ monotonic==1.6 \
     --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
     --hash=sha256:68687e19a14f11f26d140dd5c86f3dba4bf5df58003000ed467e0e2a69bca96c
     # via posthog
-posthog==3.14.2 \
-    --hash=sha256:f50d41dfe116ace4971b304518de57e0de34a936cdfdff84efed0dd993dfbcda
+posthog==3.18.0 \
+    --hash=sha256:8882fe1ee6763bafab0d82a506f52d752a8031c90eea17b4db4331fb33cf1092 \
+    --hash=sha256:88f93cc670158ea7a569629d4def77c3b714489a52b0a818b8dd6103669c652d
     # via -r requirements.in
 python-dateutil==2.9.0.post0 \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
