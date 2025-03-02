@@ -136,25 +136,164 @@ def posthog_system_info():
     )
 
 
+def get_preference(path: str, type: str, default: any, transform: callable = lambda x: x):
+    group = os.path.dirname(path)
+    name = os.path.basename(path)
+
+    preference_group = FreeCAD.ParamGet(f"User parameter:{group}")
+    getter = getattr(preference_group, f"Get{type.capitalize()}")
+
+    return transform(getter(name, default))
+
+
+class TrackedPreference:
+    @classmethod
+    def string(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="string", default=default, **kwargs)
+
+    @classmethod
+    def bool(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="bool", default=default, **kwargs)
+
+    @classmethod
+    def unsigned(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="unsigned", default=default, **kwargs)
+
+    @classmethod
+    def int(cls, path: str, default: bool, **kwargs):
+        return get_preference(path=path, type="int", default=default, **kwargs)
+
+    @classmethod
+    def double(cls, path: str, default: float, **kwargs):
+        return get_preference(path=path, type="double", default=default, **kwargs)
+
+
+def ui_panel_preferences(name: str, overlay_name: str, prefix: str):
+    def get_overlay_preferences():
+        placements = ["left", "right", "top", "bottom"]
+        for placement in placements:
+            overlay_group = FreeCAD.ParamGet(
+                f"User parameter:BaseApp/MainWindow/DockWindows/Overlay{placement.capitalize()}"
+            )
+            overlay_widgets = overlay_group.GetString("Widgets", "").split(",")
+
+            if overlay_name in overlay_widgets:
+                overlay_preferences = {
+                    "overlay": placement,
+                    "transparent": overlay_group.GetBool("Transparent", False),
+                }
+
+                if placement in ["left", "right"]:
+                    overlay_preferences["width"] = overlay_group.GetInt("Width", 0)
+                else:
+                    overlay_preferences["height"] = overlay_group.GetInt("Height", 0)
+
+                return overlay_preferences
+
+        return {}
+
+    preferences = {
+        "enabled": TrackedPreference.bool(path="BaseApp/MainWindow/DockWindows", default=False),
+        **get_overlay_preferences(),
+    }
+
+    return {f"{prefix}_{name}": preference for name, preference in preferences.items()}
+
+
 def posthog_preferences():
     """Send some basic FreeCAD preferences to Posthog"""
     global posthog
-    general = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/General")
-    main_window = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-    units = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Units")
 
-    posthog.capture(
-        posthog_id,
-        event="freecad_preferences",
-        properties={
-            "language": general.GetString("Language", FreeCADGui.getLocale()),
-            "theme": main_window.GetString("Theme", "unset"),
-            "stylesheet": main_window.GetString("Stylesheet", "unset"),
-            "geometry": main_window.GetString("Geometry", "unset"),
-            "overlay_stylesheet": main_window.GetString("OverlayActiveStyleSheet", "unset"),
-            "default_unit_schema": units.GetInt("UserSchema", 0),
-        },
-    )
+    preferences = {
+        "language": TrackedPreference.string(
+            path="BaseApp/Preferences/General/Language",
+            default=FreeCADGui.getLocale(),
+        ),
+        "theme": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/Theme", default="unset"
+        ),
+        "stylesheet": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/StyleSheet",
+            default="unset",
+        ),
+        "overlay_stylesheet": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/OverlayActiveStyleSheet",
+            default="unset",
+        ),
+        "geometry": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/Geometry",
+            default="unset",
+        ),
+        "overlay_stylesheet": TrackedPreference.string(
+            path="BaseApp/Preferences/MainWindow/OverlayActiveStyleSheet",
+            default="unset",
+        ),
+        "default_unit_schema": TrackedPreference.int(
+            path="BaseApp/Preferences/Units/UserSchema", transform=str, default=0
+        ),
+        "sketcher_dimension_single_tool": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/dimensioning/SingleDimensioningTool",
+            default=True,
+        ),
+        "sketcher_dimension_separate_tools": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/dimensioning/SeparatedDimensioningTools",
+            default=False,
+        ),
+        "sketcher_constraint_unified_coincident": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/Constraints/UnifiedCoincident",
+            default=True,
+        ),
+        "sketcher_constraint_auto_hor_ver": TrackedPreference.bool(
+            path="BaseApp/Preferences/Mod/Sketcher/Constraints/AutoHorVer",
+            default=True,
+        ),
+        "sketcher_on_view_parameters": TrackedPreference.int(
+            path="BaseApp/Preferences/Mod/Sketcher/Tools/OnViewParameterVisibility",
+            transform=str,
+            default=1,
+        ),
+        "workbench_enabled_list": TrackedPreference.string(
+            path="BaseApp/Preferences/Workbenches/Ordered",
+            transform=lambda s: s.split(","),
+            default="",
+        ),
+        "workbench_disabled_list": TrackedPreference.string(
+            path="BaseApp/Preferences/Workbenches/Disabled",
+            transform=lambda s: s.split(","),
+            default="",
+        ),
+        "workbench_default": TrackedPreference.string(
+            path="BaseApp/Preferences/General/AutoloadModule",
+            default="",
+        ),
+        "ui_workbench_selector": TrackedPreference.int(
+            path="BaseApp/Preferences/Workbenches/WorkbenchSelectorType",
+            transform=str,
+            default=0,
+        ),
+        "navigation_style": TrackedPreference.string(
+            path="BaseApp/Preferences/View/NavigationStyle",
+            default="Gui::CADNavigationStyle",
+        ),
+        "navigation_orbit_style": TrackedPreference.string(
+            path="BaseApp/Preferences/View/OrbitStyle",
+            default=1,
+        ),
+        "navigation_rotation_style": TrackedPreference.string(
+            path="BaseApp/Preferences/View/RotationStyle", default=1
+        ),
+        "ui_toolbar_icon_size": TrackedPreference.int(
+            path="BaseApp/Preferences/General/ToolbarIconSize",
+            default=24,
+        ),
+        **ui_panel_preferences("Std_TaskView", "Tasks", "ui_task_view"),
+        **ui_panel_preferences("Std_TreeView", "Tree view", "ui_tree_view"),
+        **ui_panel_preferences("Std_ComboView", "Property view", "ui_property_view"),
+        **ui_panel_preferences("Std_PythonView", "Python console", "ui_python_console"),
+        **ui_panel_preferences("Std_ReportView", "Report view", "ui_report_view"),
+    }
+
+    posthog.capture(posthog_id, event="freecad_preferences", properties=preferences)
 
 
 def posthog_addon_list():
