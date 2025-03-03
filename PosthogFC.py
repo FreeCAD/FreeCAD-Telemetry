@@ -275,11 +275,11 @@ def posthog_preferences():
             path="BaseApp/Preferences/View/NavigationStyle",
             default="Gui::CADNavigationStyle",
         ),
-        "navigation_orbit_style": TrackedPreference.string(
+        "navigation_orbit_style": TrackedPreference.int(
             path="BaseApp/Preferences/View/OrbitStyle",
             default=1,
         ),
-        "navigation_rotation_style": TrackedPreference.string(
+        "navigation_rotation_style": TrackedPreference.int(
             path="BaseApp/Preferences/View/RotationStyle", default=1
         ),
         "ui_toolbar_icon_size": TrackedPreference.int(
