@@ -45,12 +45,6 @@ def posthog_launch():
     global posthog
     global posthog_id
     """Send statistics to Posthog based on user preferences settings"""
-    release = FreeCAD.Version()
-    if release[6] and release[6] != "main":
-        FreeCAD.Console.PrintMessage(
-            f"Telemetry Addon: You are on branch {release[6]}, so no data will be sent.\n"
-        )
-        return  # Do not capture information about branches
 
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enabled", True)
