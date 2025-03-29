@@ -1,9 +1,5 @@
 # FreeCAD-Telemetry Privacy Policy
 
-**NOTE**: This addon is currently in beta testing, so while developers and system administrators are making their
-best efforts to be highly conscious of user privacy during this period, this privacy policy itself is a work in
-progress. Please make suggestions via a GitHub Issue or directly as a Pull Request on this file.
-
 The FreeCAD-Telemetry Addon is an optional Addon for FreeCAD that collects pseudonymized usage information. That
 information is transmitted across the internet and stored in a centralized database, indexed by a unique user ID
 generated randomly when first launched. While IP address data is used in communication with the server, that data is
