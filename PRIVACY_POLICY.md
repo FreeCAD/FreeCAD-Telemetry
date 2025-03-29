@@ -35,7 +35,7 @@ have access to the raw data, but aggregate data will be made available to the pu
 interested party may participate in the project.
 * Data is retained for 90 days. Retention is managed by [PostHog](https://posthog.com), our telemetry service provider.
 You may also request deletion of events related to your UUID at any time (see
-[Requesting removal of data](#requesting-removal-of-data)).
+[Requesting removal of data](https://github.com/FreeCAD/FreeCAD-Telemetry/blob/main/README.md#data-removal)).
 * For this Addon, the contact point on personal data protection issues is FPA Chair
 [Yorik van Havre](mailto:yorik@freecad.org).
 * You have the right to file a complaint with your local Data Protection Agency.
