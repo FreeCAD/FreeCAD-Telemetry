@@ -118,9 +118,9 @@ monotonic==1.6 \
     --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
     --hash=sha256:68687e19a14f11f26d140dd5c86f3dba4bf5df58003000ed467e0e2a69bca96c
     # via posthog
-posthog==3.18.0 \
-    --hash=sha256:8882fe1ee6763bafab0d82a506f52d752a8031c90eea17b4db4331fb33cf1092 \
-    --hash=sha256:88f93cc670158ea7a569629d4def77c3b714489a52b0a818b8dd6103669c652d
+posthog==3.23.0 \
+    --hash=sha256:1ac0305ab6c54a80c4a82c137231f17616bef007bbf474d1a529cda032d808eb \
+    --hash=sha256:2b07d06670170ac2e21465dffa8d356722834cc877ab34e583da6e525c1037df
     # via -r requirements.in
 python-dateutil==2.9.0.post0 \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
