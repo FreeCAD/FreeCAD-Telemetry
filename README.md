@@ -136,8 +136,7 @@ To receive a copy of the data associated with your UUID, please send email to
 
 The data is collected by [The FreeCAD project association AISBL](https://fpa.freecad.org/) who stewards the data
 on behalf of all users and developers of FreeCAD. Only FPA officers, FreeCAD's maintainers, and system administrators
-have access to the raw data, but aggregate data will be made available to the public. Publication of the data is
-currently a work-in-progress.
+have access to the raw data, but aggregate data is available to the public at https://www.freecad.org/telemetry.php
 
 ### Privacy and GDPR compliance
 
