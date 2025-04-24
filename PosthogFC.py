@@ -35,10 +35,11 @@ except ImportError as e:
 from datetime import datetime
 import os
 import platform
+from typing import Optional, Dict, Any
 import uuid
 
-posthog = None
-posthog_id = None
+posthog: Optional[Posthog] = None
+posthog_id: str = ""
 
 
 def posthog_launch():
@@ -62,6 +63,7 @@ def posthog_launch():
         ),
         host=params.GetString("PostHogURL", "https://eu.i.posthog.com"),
         disable_geoip=True,
+        on_error=handle_error,
     )
 
     system = params.GetBool("SendSystemInformation", True)
@@ -83,6 +85,13 @@ def posthog_launch():
         )
         posthog_preferences()
     params.SetString("LastSendTime", datetime.now().isoformat())
+
+
+def handle_error(exception: Exception, _payload: Optional[Dict[str, Any]]) -> None:
+    FreeCAD.Console.PrintMessage(
+        "Telemetry Addon: Error connecting, no telemetry will be sent for this session\n"
+    )
+    FreeCAD.Console.PrintLog(str(exception) + "\n")
 
 
 def posthog_fc_startup():
@@ -130,39 +139,39 @@ def posthog_system_info():
     )
 
 
-def get_preference(path: str, type: str, default: any, transform: callable = lambda x: x):
+def get_preference(path: str, pref_type: str, default: any, transform: callable = lambda x: x):
     group = os.path.dirname(path)
     name = os.path.basename(path)
 
     preference_group = FreeCAD.ParamGet(f"User parameter:{group}")
-    getter = getattr(preference_group, f"Get{type.capitalize()}")
+    getter = getattr(preference_group, f"Get{pref_type.capitalize()}")
 
     return transform(getter(name, default))
 
 
 class TrackedPreference:
     @classmethod
-    def string(cls, path: str, default: bool, **kwargs):
-        return get_preference(path=path, type="string", default=default, **kwargs)
+    def string(cls, path: str, default: str, **kwargs):
+        return get_preference(path=path, pref_type="string", default=default, **kwargs)
 
     @classmethod
     def bool(cls, path: str, default: bool, **kwargs):
-        return get_preference(path=path, type="bool", default=default, **kwargs)
+        return get_preference(path=path, pref_type="bool", default=default, **kwargs)
 
     @classmethod
-    def unsigned(cls, path: str, default: bool, **kwargs):
-        return get_preference(path=path, type="unsigned", default=default, **kwargs)
+    def unsigned(cls, path: str, default: int, **kwargs):
+        return get_preference(path=path, pref_type="unsigned", default=default, **kwargs)
 
     @classmethod
-    def int(cls, path: str, default: bool, **kwargs):
-        return get_preference(path=path, type="int", default=default, **kwargs)
+    def int(cls, path: str, default: int, **kwargs):
+        return get_preference(path=path, pref_type="int", default=default, **kwargs)
 
     @classmethod
     def double(cls, path: str, default: float, **kwargs):
-        return get_preference(path=path, type="double", default=default, **kwargs)
+        return get_preference(path=path, pref_type="double", default=default, **kwargs)
 
 
-def ui_panel_preferences(name: str, overlay_name: str, prefix: str):
+def ui_panel_preferences(_name: str, overlay_name: str, prefix: str):
     def get_overlay_preferences():
         placements = ["left", "right", "top", "bottom"]
         for placement in placements:
@@ -216,10 +225,6 @@ def posthog_preferences():
         ),
         "geometry": TrackedPreference.string(
             path="BaseApp/Preferences/MainWindow/Geometry",
-            default="unset",
-        ),
-        "overlay_stylesheet": TrackedPreference.string(
-            path="BaseApp/Preferences/MainWindow/OverlayActiveStyleSheet",
             default="unset",
         ),
         "default_unit_schema": TrackedPreference.int(
