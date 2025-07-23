@@ -96,12 +96,12 @@ def handle_error(exception: Exception, _payload: Optional[Dict[str, Any]]) -> No
 
 def posthog_fc_startup():
     global posthog
-    posthog.capture(posthog_id, event="freecad_startup")
+    posthog.capture(distinct_id=posthog_id, event="freecad_startup")
 
 
 def posthog_fc_shutdown():
     global posthog
-    posthog.capture(posthog_id, event="freecad_shutdown")
+    posthog.capture(distinct_id=posthog_id, event="freecad_shutdown")
 
 
 def posthog_fc_version():
@@ -110,7 +110,7 @@ def posthog_fc_version():
     release = FreeCAD.Version()
 
     posthog.capture(
-        posthog_id,
+        distinct_id=posthog_id,
         event="freecad_version",
         properties={
             "version_major": release[0],
@@ -126,7 +126,7 @@ def posthog_system_info():
     screen = FreeCADGui.getMainWindow().screen()
     screen_size = screen.availableSize()
     posthog.capture(
-        posthog_id,
+        distinct_id=posthog_id,
         event="freecad_system_info",
         properties={
             "machine": platform.machine(),
@@ -292,7 +292,7 @@ def posthog_preferences():
         **ui_panel_preferences("Std_ReportView", "Report view", "ui_report_view"),
     }
 
-    posthog.capture(posthog_id, event="freecad_preferences", properties=preferences)
+    posthog.capture(distinct_id=posthog_id, event="freecad_preferences", properties=preferences)
 
 
 def posthog_addon_list():
@@ -307,7 +307,7 @@ def posthog_addon_list():
             if not ".backup" in mod_dir and mod_dir[0] != "." and mod_dir != "CVS":
                 mods.append(mod_dir.lower())
     posthog.capture(
-        posthog_id,
+        distinct_id=posthog_id,
         event="freecad_addon_list",
         properties={"mods": mods, "total_mods": len(mods)},
     )
