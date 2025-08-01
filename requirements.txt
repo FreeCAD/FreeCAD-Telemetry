@@ -114,9 +114,9 @@ idna==3.10 \
     --hash=sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9 \
     --hash=sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3
     # via requests
-posthog==6.0.1 \
-    --hash=sha256:c0f28bfc0f1dc8d4b47aa2bed670343273fa1d69f1e775313d78eec3cb169daa \
-    --hash=sha256:fab081cba269b743cfdc995692f97d71ef3e952c414188415158f5a5c37b1848
+posthog==6.3.2 \
+    --hash=sha256:19171873b8e4beccf7611bea845e07194aa5af975598ab44a71201ee8a1bb2d2 \
+    --hash=sha256:8ce32918ad63eef1fd216150dd1dad4aab019596c5332eb4889b9589170db3b8
     # via -r requirements.in
 python-dateutil==2.9.0.post0 \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
