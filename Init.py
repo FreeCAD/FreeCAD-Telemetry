@@ -37,12 +37,12 @@ def setup_sentry():
 
     enabled = params.GetBool("Enable", True)
     if not enabled:
-        FreeCAD.Console.PrintMessage(
+        FreeCAD.Console.PrintLog(
             "Sentry initializing, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
         )
         dsn = None
     else:
-        FreeCAD.Console.PrintMessage("Sentry initializing. FreeCAD Telemetry sending is active.\n")
+        FreeCAD.Console.PrintLog("Sentry initializing. FreeCAD Telemetry sending is active.\n")
     init_sentry(dsn=dsn)
 
 

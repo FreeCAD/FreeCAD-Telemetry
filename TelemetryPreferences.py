@@ -109,17 +109,17 @@ class TelemetryPreferences:
     #        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     #        params.SetString("DSN", text)
     #        init_sentry(text)
-    #        FreeCAD.Console.PrintMessage(f"Telemetry is now being sent to {text}\n")
+    #        FreeCAD.Console.PrintLog(f"Telemetry is now being sent to {text}\n")
     #        self._reset_sentry()
 
     #    def _reset_sentry(self):
     #        params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     #        if params.GetBool("Enable", True):
     #            dsn = params.GetString("DSN", "unset")
-    #            FreeCAD.Console.PrintMessage(f"Resetting Sentry to use DSN {dsn}\n")
+    #            FreeCAD.Console.PrintLog(f"Resetting Sentry to use DSN {dsn}\n")
     #            init_sentry(dsn=dsn)
     #        else:
-    #            FreeCAD.Console.PrintMessage(f"Deactivating Sentry (setting dsn=None)\n")
+    #            FreeCAD.Console.PrintLog(f"Deactivating Sentry (setting dsn=None)\n")
     #            init_sentry(dsn=None)
 
     def _data_removal_clicked(self):
@@ -163,11 +163,11 @@ class TelemetryPreferences:
                         "Telemetry", "Your user data was successfully removed from the database."
                     )
                 else:
-                    FreeCAD.Console.PrintMessage(
+                    FreeCAD.Console.PrintLog(
                         f"Received a {response.status} response to our request\n"
                     )
                     FreeCAD.Console.PrintError(response.read() + "\n")
                     return False, error_string
         except urllib.request.HTTPError as e:
-            FreeCAD.Console.PrintMessage(str(e) + "\n")
+            FreeCAD.Console.PrintLog(str(e) + "\n")
             return False, error_string

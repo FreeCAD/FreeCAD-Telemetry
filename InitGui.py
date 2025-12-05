@@ -46,14 +46,12 @@ def setup_posthog():
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enable", True)
     if not enabled:
-        FreeCAD.Console.PrintMessage(
+        FreeCAD.Console.PrintLog(
             "PostHog initializing, but FreeCAD launch metrics sending is disabled: no data will be transmitted\n"
         )
         return
     else:
-        FreeCAD.Console.PrintMessage(
-            "PostHog initializing. FreeCAD launch metrics are being sent.\n"
-        )
+        FreeCAD.Console.PrintLog("PostHog initializing. FreeCAD launch metrics are being sent.\n")
     posthog_launch()
 
 
@@ -99,7 +97,7 @@ class Telemetry(Workbench):
 
     def __init__(self):
         super().__init__()
-        FreeCAD.Console.PrintMessage("Telemetry workbench loaded\n")
+        FreeCAD.Console.PrintLog("Telemetry workbench loaded\n")
 
     def Activated(self):
         """This function is executed when the workbench is activated"""

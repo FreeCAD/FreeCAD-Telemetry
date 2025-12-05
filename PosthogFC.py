@@ -70,25 +70,23 @@ def posthog_launch():
     addon = params.GetBool("SendAddonInformation", True)
     preferences = params.GetBool("SendPreferences", True)
 
-    FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD version data to Posthog\n")
+    FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD version data to Posthog\n")
     posthog_fc_startup()
     posthog_fc_version()
     if system:
-        FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD system info to Posthog\n")
+        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD system info to Posthog\n")
         posthog_system_info()
     if addon:
-        FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD addon info to Posthog\n")
+        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD addon info to Posthog\n")
         posthog_addon_list()
     if preferences:
-        FreeCAD.Console.PrintMessage(
-            "Telemetry Addon: Sending FreeCAD preferences info to Posthog\n"
-        )
+        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD preferences info to Posthog\n")
         posthog_preferences()
     params.SetString("LastSendTime", datetime.now().isoformat())
 
 
 def handle_error(exception: Exception, _payload: Optional[Dict[str, Any]]) -> None:
-    FreeCAD.Console.PrintMessage(
+    FreeCAD.Console.PrintLog(
         "Telemetry Addon: Error connecting, no telemetry will be sent for this session\n"
     )
     FreeCAD.Console.PrintLog(str(exception) + "\n")
@@ -317,6 +315,6 @@ def posthog_shutdown():
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enabled", True)
     if enabled and posthog:
-        FreeCAD.Console.PrintMessage("Telemetry Addon: Sending FreeCAD shutdown info to Posthog\n")
+        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD shutdown info to Posthog\n")
         posthog_fc_shutdown()
         posthog.flush()
