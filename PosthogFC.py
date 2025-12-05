@@ -80,9 +80,7 @@ def posthog_launch():
         FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD addon info to Posthog\n")
         posthog_addon_list()
     if preferences:
-        FreeCAD.Console.PrintLog(
-            "Telemetry Addon: Sending FreeCAD preferences info to Posthog\n"
-        )
+        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD preferences info to Posthog\n")
         posthog_preferences()
     params.SetString("LastSendTime", datetime.now().isoformat())
 

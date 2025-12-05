@@ -51,9 +51,7 @@ def setup_posthog():
         )
         return
     else:
-        FreeCAD.Console.PrintLog(
-            "PostHog initializing. FreeCAD launch metrics are being sent.\n"
-        )
+        FreeCAD.Console.PrintLog("PostHog initializing. FreeCAD launch metrics are being sent.\n")
     posthog_launch()
 
 
