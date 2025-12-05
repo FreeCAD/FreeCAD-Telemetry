@@ -33,11 +33,11 @@ except ImportError as e:
 
 
 def before_send(event, _):
-    FreeCAD.Console.PrintMessage(f"Sending event to Sentry: {event}\n")
+    FreeCAD.Console.PrintLog(f"Sending event to Sentry: {event}\n")
     params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enable", False)
     if not enabled:
-        FreeCAD.Console.PrintMessage("  -> Send blocked because Telemetry is disabled\n")
+        FreeCAD.Console.PrintLog("  -> Send blocked because Telemetry is disabled\n")
         return None  # Drop the event
     return event
 
@@ -49,8 +49,8 @@ def init_sentry(dsn):
     release = FreeCAD.Version()
 
     if release[6] and release[6] != "main":
-        FreeCAD.Console.PrintMessage("FreeCAD Telemetry addon disabled: not on main branch\n")
-        FreeCAD.Console.PrintMessage(f"FreeCAD branch: {release[6]}\n")
+        FreeCAD.Console.PrintLog("FreeCAD Telemetry addon disabled: not on main branch\n")
+        FreeCAD.Console.PrintLog(f"FreeCAD branch: {release[6]}\n")
         return
 
     major = release[0]
@@ -80,5 +80,5 @@ def init_sentry(dsn):
 
 
 def close_sentry_session():
-    FreeCAD.Console.PrintMessage("Closing Sentry session\n")
+    FreeCAD.Console.PrintLog("Closing Sentry session\n")
     sentry_sdk.get_global_scope().start_session()
