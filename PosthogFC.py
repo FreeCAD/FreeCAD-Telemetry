@@ -302,7 +302,12 @@ def posthog_addon_list():
     if os.path.isdir(home_mod):
         mod_dirs = os.listdir(home_mod)
         for mod_dir in mod_dirs:
-            if not ".backup" in mod_dir and mod_dir[0] != "." and mod_dir != "CVS" and mod_dir != "manifest.json":
+            if (
+                not ".backup" in mod_dir
+                and mod_dir[0] != "."
+                and mod_dir != "CVS"
+                and mod_dir != "manifest.json"
+            ):
                 mods.append(mod_dir.lower())
     posthog.capture(
         distinct_id=posthog_id,
