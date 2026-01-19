@@ -35,7 +35,6 @@ import TelemetryPreferences
 # from Sentry import close_sentry_session
 from PosthogFC import posthog_shutdown, posthog_launch, posthog_addon_list
 
-
 FreeCADGui.addLanguagePath(TelemetryPaths.language_path)
 FreeCADGui.updateLocale()
 
