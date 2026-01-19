@@ -23,6 +23,7 @@
 
 """Run a full CrowdIn translation cycle for this addon. Requires that the
 CrowdIn API token is stored in ~/.crowdin-freecad-token, and that lupdate be in PATH."""
+
 import collections
 import datetime
 import json
