@@ -308,6 +308,13 @@ def posthog_addon_list():
                 and mod_dir != "CVS"
                 and mod_dir != "manifest.json"
             ):
+                # See if there's a metadata file with the proper full name of the mod:
+                package_xml = os.path.join(home_mod, mod_dir, "package.xml")
+                if os.path.exists(package_xml):
+                    metadata = FreeCAD.Metadata(package_xml)
+                    if metadata and metadata.Name:
+                        mods.append(metadata.Name)
+                        continue
                 mods.append(mod_dir.lower())
     posthog.capture(
         distinct_id=posthog_id,
