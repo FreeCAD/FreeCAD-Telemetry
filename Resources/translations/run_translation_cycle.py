@@ -1,25 +1,29 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
-# ***************************************************************************
-# *                                                                         *
-# *   Copyright (c) 2025 The FreeCAD project association AISBL              *
-# *                                                                         *
-# *   This file is part of the FreeCAD Telemetry Addon.                     *
-# *                                                                         *
-# *   This is free software: you can redistribute it and/or modify it       *
-# *   under the terms of the GNU Lesser General Public License as           *
-# *   published by the Free Software Foundation, either version 2.1 of the  *
-# *   License, or (at your option) any later version.                       *
-# *                                                                         *
-# *   The software is distributed in the hope that it will be useful, but   *
-# *   WITHOUT ANY WARRANTY; without even the implied warranty of            *
-# *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      *
-# *   Lesser General Public License for more details.                       *
-# *                                                                         *
-# *   You should have received a copy of the GNU Lesser General Public      *
-# *   License along with the FreeCAD Addon Manager. If not, see             *
-# *   <https://www.gnu.org/licenses/>.                                      *
-# *                                                                         *
-# ***************************************************************************
+# SPDX-FileNotice: Part of the Telemetry addon.
+# SPDX-FileNotice: From FreeCAD's updatecrowdin.py script
+
+################################################################################
+#                                                                              #
+#   © 2015 Yorik van Havre <yorik@uncreated.net>                               #
+#   © 2021 Benjamin Nauck <benjamin@nauck.se>                                  #
+#   © 2021 Mattias Pierre <github@mattiaspierre.com>                           #
+#   © 2025 FreeCAD Project Association                                         #
+#                                                                              #
+#   This addon is free software: you can redistribute it and/or modify         #
+#   it under the terms of the GNU Lesser General Public License as             #
+#   published by the Free Software Foundation, either version 2.1              #
+#   of the License, or (at your option) any later version.                     #
+#                                                                              #
+#   This addon is distributed in the hope that it will be useful,              #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty                #
+#   of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    #
+#   See the GNU Lesser General Public License for more details.                #
+#                                                                              #
+#   You should have received a copy of the GNU Lesser General Public           #
+#   License along with this addon. If not, see https://www.gnu.org/licenses    #
+#                                                                              #
+################################################################################
+
 
 """Run a full CrowdIn translation cycle for this addon. Requires that the
 CrowdIn API token is stored in ~/.crowdin-freecad-token, and that lupdate be in PATH."""
@@ -47,11 +51,6 @@ BASE_FILENAME = "Telemetry"
 MIN_TRANSLATION_THRESHOLD = 0.5
 
 
-# The CrowdinUpdater class is from FreeCAD's updatecrowdin.py script
-# SPDX-License-Identifier: LGPL-2.1-or-later
-# Copyright (c) 2015 Yorik van Havre <yorik@uncreated.net>
-# Copyright (c) 2021 Benjamin Nauck <benjamin@nauck.se>
-# Copyright (c) 2021 Mattias Pierre <github@mattiaspierre.com>
 class CrowdinUpdater:
 
     BASE_URL = CROWDIN_API_URL
