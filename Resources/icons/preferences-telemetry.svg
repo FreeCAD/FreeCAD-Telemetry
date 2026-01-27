@@ -41,12 +41,12 @@
         </dc:creator>
         <dc:publisher>
           <cc:Agent>
-            <dc:title>The FreeCAD project association AISBL (FPA)</dc:title>
+            <dc:title>FreeCAD Project Association</dc:title>
           </cc:Agent>
         </dc:publisher>
         <dc:rights>
           <cc:Agent>
-            <dc:title>Copyright (c) 2025 The FreeCAD Project Association AISBL.</dc:title>
+            <dc:title>FreeCAD Project Association</dc:title>
           </cc:Agent>
         </dc:rights>
         <cc:license
