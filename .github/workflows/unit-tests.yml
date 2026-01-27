@@ -20,38 +20,47 @@
 #                                                                              #
 ################################################################################
 
-# Main CI entry point for the Telemetry Addon.
 
-name: Run Python Unit Tests
+name : Unit Tests
+
 
 permissions:
-  contents: read
+
+    contents : read
+
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    pull_request:
+
+        branches : [ main ]
+
+    push:
+
+        branches : [ main ]
+
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+    test:
 
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+        runs-on : ubuntu-latest
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
+        steps:
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --no-cache-dir --require-hashes -r requirements.txt
+            -   name : Checkout Repository
+                uses : actions/checkout@v6
 
-      - name: Run tests
-        run: python -m unittest discover Tests
+            -   name : Setup Python
+                uses : actions/setup-python@v6
+                with :
+                    python-version-file : pyproject.toml
+
+            -   name : Setup UV
+                uses : astral-sh/setup-uv@v7
+                with :
+                    version : 0.9.27
+
+            -   name : Install Project
+                run : uv sync --locked
+
+            -   name : Execute Tests
+                run : uv run --module unittest discover Tests
