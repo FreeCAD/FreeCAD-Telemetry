@@ -152,7 +152,7 @@ interpreter that FreeCAD uses to ensure the requirements are found).
 
 
 [FreeCAD]: https://freecad.org
-[Logo]: Resources/icons/TelemetryIcon.png "A heart rate monitor with the FreeCAD logo on it"
+[Logo]: ./freecad/Telemetry/Resources/Icon/Logo.png "A heart rate monitor with the FreeCAD logo on it"
 
 [Python - SVersion]: https://docs.python.org/3/library/platform.html#platform.version
 [Python - PVersion]: https://docs.python.org/3/library/platform.html#platform.python_version

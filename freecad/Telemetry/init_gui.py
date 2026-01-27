@@ -20,56 +20,42 @@
 #                                                                              #
 ################################################################################
 
-import FreeCAD
-import FreeCADGui
+import freecad.Telemetry.Environment
 
-from datetime import datetime, timedelta
-import os
+from FreeCAD import Console, ParamGet, Gui
 
-from PySide import QtWidgets
+from .Preferences import Preferences
+from .Resources import asInterface, asIcon, Paths
+from .PostHog import posthog_shutdown, posthog_launch
+from .PySide import QtWidgets
 
-import TelemetryPaths
-import TelemetryPreferences
-
-# from Sentry import close_sentry_session
-from PosthogFC import posthog_shutdown, posthog_launch, posthog_addon_list
-
-FreeCADGui.addLanguagePath(TelemetryPaths.language_path)
-FreeCADGui.updateLocale()
+Gui.addLanguagePath(Paths["Translations"])
+Gui.updateLocale()
 
 
 def setup_posthog():
-    global posthog_launch
-    global posthog_addon_list
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    params = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enable", True)
     if not enabled:
-        FreeCAD.Console.PrintLog(
+        Console.PrintLog(
             "PostHog initializing, but FreeCAD launch metrics sending is disabled: no data will be transmitted\n"
         )
         return
     else:
-        FreeCAD.Console.PrintLog("PostHog initializing. FreeCAD launch metrics are being sent.\n")
+        Console.PrintLog("PostHog initializing. FreeCAD launch metrics are being sent.\n")
     posthog_launch()
 
 
 def setup():
-    global TelemetryPaths
-    global TelemetryPreferences
-    global QtWidgets
-    # global close_sentry_session
-    global posthog_shutdown, setup_posthog
 
-    FreeCADGui.addPreferencePage(TelemetryPreferences.TelemetryPreferences, "Telemetry")
-    FreeCADGui.addIconPath(TelemetryPaths.icons_path)
+    Gui.addPreferencePage(Preferences, "Telemetry")
+    Gui.addIconPath(Paths["Icons"])
 
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    params = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     first_start = params.GetBool("FirstStart", True)
 
     if first_start:
-        dialog = FreeCADGui.PySideUic.loadUi(
-            os.path.join(TelemetryPaths.panels_path, "first_start.ui")
-        )
+        dialog = Gui.PySideUic.loadUi(asInterface("Welcome"))  # type: ignore
         dialog.exec()
 
         enabled = dialog.settings_group_box.isChecked()
@@ -85,17 +71,21 @@ def setup():
         params.SetBool("FirstStart", False)
 
     setup_posthog()
-    QtWidgets.QApplication.instance().aboutToQuit.connect(posthog_shutdown)
+
+    app = QtWidgets.QApplication.instance()
+
+    if app:
+        app.aboutToQuit.connect(posthog_shutdown)
 
 
-class Telemetry(Workbench):
+class Telemetry(Gui.Workbench):
     """Telemetry is not *really* a workbench, so this class is basically empty."""
 
-    Icon = os.path.join(TelemetryPaths.icons_path, "telemetryLogo.svg")
+    Icon = asIcon("Logo")
 
     def __init__(self):
         super().__init__()
-        FreeCAD.Console.PrintLog("Telemetry workbench loaded\n")
+        Console.PrintLog("Telemetry workbench loaded\n")
 
     def Activated(self):
         """This function is executed when the workbench is activated"""

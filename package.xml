@@ -1,23 +1,98 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
-  <name>Telemetry</name>
-  <description>Help improve FreeCAD by sending basic metrics to the development team.</description>
-  <version>1.0.5</version>
-  <date>2026-1-21</date>
-  <maintainer email="telemetry@freecad.org">The FreeCAD project association AISBL</maintainer>
-  <license file="LICENSE-Code">LGPL-2.1-or-later</license>
-  <license file="LICENSE-Icon">CC-BY-4.0</license>
-  <url type="repository" branch="main">https://github.com/FreeCAD/FreeCAD-Telemetry</url>
-  <url type="readme">https://github.com/FreeCAD/FreeCAD-Telemetry/blob/main/README.md</url>
-  <icon>Resources/icons/telemetryLogo.svg</icon>
+<?xml
+    version = '1.0'
+    encoding = 'UTF-8'
+    standalone = 'no'
+?>
+<package
+    format = '1'
+    xmlns = 'https://wiki.freecad.org/Package_Metadata'
+>
 
-  <content>
-    <workbench>
-      <classname>Telemetry</classname>
-      <subdirectory>./</subdirectory>
-      <tag>telemetry</tag>
-      <depend type="python">posthog</depend>
-    </workbench>
-  </content>
+    <!--[ Versions ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <freecadmin>0.20.0</freecadmin>
+    <version>1.0.5</version>
+    <date>2026-01-21</date>
+
+    <!--[ Dependencies ]―――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <depend
+        version_gte = '7.6.0'
+        type = 'python'
+    >posthog</depend>
+
+    <!--[ Info ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <description>Help FreeCAD to improve by sending basic telemetry data.</description>
+    <name>Telemetry</name>
+
+    <!--[ Tags ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <tag>Community</tag>
+    <tag>Telemetry</tag>
+    <tag>Metrics</tag>
+    <tag>Data</tag>
+
+    <!--[ Maintainers ]――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <maintainer
+        email = 'telemetry@freecad.org'
+    >FreeCAD Project Association</maintainer>
+
+    <!--[ Authors ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <author
+        email = 'telemetry@freecad.org'
+    >FreeCAD Project Association</author>
+
+    <!--[ Licenses ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <license
+        file = 'LICENSE-Code'
+    >LGPL-2.1-or-later</license>
+
+    <license
+        file = 'LICENSE-Icon'
+    >CC-BY-4.0</license>
+
+    <!--[ Icon ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <icon>freecad/Telemetry/Resources/Icon/Logo.svg</icon>
+
+    <!--[ Urls ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <url
+        type = 'documentation'
+    >https://github.com/FreeCAD/FreeCAD-Telemetry</url>
+
+    <url
+        branch = 'main'
+        type = 'repository'
+    >https://github.com/FreeCAD/FreeCAD-Telemetry</url>
+
+    <url
+        type = 'bugtracker'
+    >https://forum.freecad.org/viewtopic.php?t=95917</url>
+
+    <url
+        type = 'discussion'
+    >https://github.com/FreeCAD/FreeCAD-Telemetry/issues</url>
+
+    <url
+        type = 'website'
+    >https://fpa.freecad.org</url>
+
+    <url
+        type = 'readme'
+    >https://github.com/FreeCAD/FreeCAD-Telemetry/blob/main/README.md</url>
+
+    <!--[ Content ]――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
+
+    <content>
+        <workbench>
+            <subdirectory>.</subdirectory>
+            <classname>Telemetry</classname>
+        </workbench>
+    </content>
 
 </package>

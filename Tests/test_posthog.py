@@ -20,16 +20,13 @@
 #                                                                              #
 ################################################################################
 
-import importlib
-import unittest
-from unittest.mock import patch, MagicMock
-import mocks
-import sys
-
+from unittest.mock import MagicMock, patch
 from Tests.mocks import FreeCADMock
+from unittest import TestCase
+from sys import modules
 
 
-class PosthogFCTest(unittest.TestCase):
+class PosthogTest(TestCase):
 
     def setUp(self):
         """On setup, ensure the real imports are never executed."""
@@ -37,22 +34,22 @@ class PosthogFCTest(unittest.TestCase):
         self.fcg = MagicMock()
         self.ph = MagicMock()
 
-        self.fc_patch = unittest.mock.patch.dict("sys.modules", {"FreeCAD": self.fc})
+        self.fc_patch = patch.dict("sys.modules", {"FreeCAD": self.fc})
         self.fc_patch.start()
 
-        self.fcg_patch = unittest.mock.patch.dict("sys.modules", {"FreeCADGui": self.fcg})
+        self.fcg_patch = patch.dict("sys.modules", {"FreeCADGui": self.fcg})
         self.fcg_patch.start()
 
-        self.posthog_patch = unittest.mock.patch.dict("sys.modules", {"posthog": self.ph})
+        self.posthog_patch = patch.dict("sys.modules", {"posthog": self.ph})
         self.posthog_patch.start()
 
     def tearDown(self):
         self.fc_patch.stop()
         self.fcg_patch.stop()
         self.posthog_patch.stop()
-        sys.modules.pop("FreeCAD", None)
-        sys.modules.pop("FreeCADGui", None)
-        sys.modules.pop("posthog", None)
+        modules.pop("FreeCAD", None)
+        modules.pop("FreeCADGui", None)
+        modules.pop("posthog", None)
 
     def test_posthog_launch_addon_disabled(self):
         """Ensure that when disabled no calls to posthog are made"""
@@ -60,9 +57,9 @@ class PosthogFCTest(unittest.TestCase):
             "User parameter:BaseApp/Preferences/Mod/Telemetry", {"Enabled": False}
         )
         with patch("posthog.Posthog") as MockPosthog:
-            import PosthogFC
+            from freecad.Telemetry.PostHog import posthog_launch
 
-            PosthogFC.posthog_launch()
+            posthog_launch()
             MockPosthog.assert_not_called()
             instance = MockPosthog.return_value
             instance.capture.assert_not_called()
@@ -73,9 +70,9 @@ class PosthogFCTest(unittest.TestCase):
             "User parameter:BaseApp/Preferences/Mod/Telemetry", {"Enabled": True}
         )
         with patch("posthog.Posthog") as MockPosthog:
-            import PosthogFC
+            from freecad.Telemetry.PostHog import posthog_launch
 
-            PosthogFC.posthog_launch()
+            posthog_launch()
             MockPosthog.assert_called()
             instance = MockPosthog.return_value
             instance.capture.assert_called()
@@ -83,9 +80,9 @@ class PosthogFCTest(unittest.TestCase):
     def test_posthog_all_info_sent_by_default(self):
         """Ensure that with defaults used, all info is sent"""
         with patch("posthog.Posthog") as MockPosthog:
-            import PosthogFC
+            from freecad.Telemetry.PostHog import posthog_launch
 
-            PosthogFC.posthog_launch()
+            posthog_launch()
             instance = MockPosthog.return_value
             args = instance.capture.call_args_list
             expected_events = [
@@ -110,9 +107,9 @@ class PosthogFCTest(unittest.TestCase):
             "User parameter:BaseApp/Preferences/Mod/Telemetry", {"SendSystemInformation": False}
         )
         with patch("posthog.Posthog") as MockPosthog:
-            import PosthogFC
+            from freecad.Telemetry.PostHog import posthog_launch
 
-            PosthogFC.posthog_launch()
+            posthog_launch()
             instance = MockPosthog.return_value
             args = instance.capture.call_args_list
             for arg in args:
@@ -124,9 +121,9 @@ class PosthogFCTest(unittest.TestCase):
             "User parameter:BaseApp/Preferences/Mod/Telemetry", {"SendAddonInformation": False}
         )
         with patch("posthog.Posthog") as MockPosthog:
-            import PosthogFC
+            from freecad.Telemetry.PostHog import posthog_launch
 
-            PosthogFC.posthog_launch()
+            posthog_launch()
             instance = MockPosthog.return_value
             args = instance.capture.call_args_list
             for arg in args:
@@ -138,9 +135,9 @@ class PosthogFCTest(unittest.TestCase):
             "User parameter:BaseApp/Preferences/Mod/Telemetry", {"SendPreferences": False}
         )
         with patch("posthog.Posthog") as MockPosthog:
-            import PosthogFC
+            from freecad.Telemetry.PostHog import posthog_launch
 
-            PosthogFC.posthog_launch()
+            posthog_launch()
             instance = MockPosthog.return_value
             args = instance.capture.call_args_list
             for arg in args:

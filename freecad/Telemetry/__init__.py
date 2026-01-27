@@ -20,38 +20,31 @@
 #                                                                              #
 ################################################################################
 
-# Main CI entry point for the Telemetry Addon.
 
-name: Run Python Unit Tests
+from FreeCAD import Console, ParamGet
 
-permissions:
-  contents: read
+# from .Sentry import init_sentry
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+def setup_sentry():
+    global init_sentry
+    global close_sentry_session
+    params = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    dsn = params.GetString("DSN", "unset")
+    if dsn == "unset":
+        dsn = "https://ff3b28f395e6df9ba8fc4c34e03ffdc7@o4508819774963712.ingest.de.sentry.io/4508819779944528"
+        params.SetString("DSN", dsn)
 
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+    enabled = params.GetBool("Enable", True)
+    if not enabled:
+        Console.PrintLog(
+            "Sentry initializing, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
+        )
+        dsn = None
+    else:
+        Console.PrintLog("Sentry initializing. FreeCAD Telemetry sending is active.\n")
+    # init_sentry(dsn=dsn)
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --no-cache-dir --require-hashes -r requirements.txt
-
-      - name: Run tests
-        run: python -m unittest discover Tests
+# Currently not using Sentry
+# setup_sentry()

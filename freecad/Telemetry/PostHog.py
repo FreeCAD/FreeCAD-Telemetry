@@ -20,22 +20,15 @@
 #                                                                              #
 ################################################################################
 
-try:
-    import FreeCAD
-    import FreeCADGui
-except ImportError as e:
-    raise RuntimeError("This is a FreeCAD Addon, and should be run from within FreeCAD") from e
-
-try:
-    from posthog import Posthog
-except ImportError as e:
-    raise ImportError("Posthog Python package is not installed: pip install posthog") from e
 
 from datetime import datetime
-import os
+from FreeCAD import getUserAppDataDir, Metadata, Console, ParamGet, Version, Gui
+from posthog import Posthog
+from typing import Optional, Callable, Dict, Any
+from uuid import uuid4
+
 import platform
-from typing import Optional, Dict, Any
-import uuid
+import os
 
 posthog: Optional[Posthog] = None
 posthog_id: str = ""
@@ -46,14 +39,14 @@ def posthog_launch():
     global posthog_id
     """Send statistics to Posthog based on user preferences settings"""
 
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    params = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enabled", True)
     if not enabled:
         return  # Addon is disabled, send nothing
 
     posthog_id = params.GetString("PostHogUUID", "unset")
     if posthog_id == "unset":
-        posthog_id = str(uuid.uuid4())
+        posthog_id = str(uuid4())
         params.SetString("PostHogUUID", posthog_id)
 
     posthog = Posthog(
@@ -69,42 +62,50 @@ def posthog_launch():
     addon = params.GetBool("SendAddonInformation", True)
     preferences = params.GetBool("SendPreferences", True)
 
-    FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD version data to Posthog\n")
+    Console.PrintLog("Telemetry Addon: Sending FreeCAD version data to Posthog\n")
     posthog_fc_startup()
     posthog_fc_version()
     if system:
-        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD system info to Posthog\n")
+        Console.PrintLog("Telemetry Addon: Sending FreeCAD system info to Posthog\n")
         posthog_system_info()
     if addon:
-        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD addon info to Posthog\n")
+        Console.PrintLog("Telemetry Addon: Sending FreeCAD addon info to Posthog\n")
         posthog_addon_list()
     if preferences:
-        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD preferences info to Posthog\n")
+        Console.PrintLog("Telemetry Addon: Sending FreeCAD preferences info to Posthog\n")
         posthog_preferences()
     params.SetString("LastSendTime", datetime.now().isoformat())
 
 
 def handle_error(exception: Exception, _payload: Optional[Dict[str, Any]]) -> None:
-    FreeCAD.Console.PrintLog(
+    Console.PrintLog(
         "Telemetry Addon: Error connecting, no telemetry will be sent for this session\n"
     )
-    FreeCAD.Console.PrintLog(str(exception) + "\n")
+    Console.PrintLog(str(exception) + "\n")
 
 
 def posthog_fc_startup():
     global posthog
-    posthog.capture(distinct_id=posthog_id, event="freecad_startup")
+
+    if posthog:
+        posthog.capture(distinct_id=posthog_id, event="freecad_startup")
 
 
 def posthog_fc_shutdown():
     global posthog
-    posthog.capture(distinct_id=posthog_id, event="freecad_shutdown")
+
+    if posthog:
+        posthog.capture(distinct_id=posthog_id, event="freecad_shutdown")
 
 
 def posthog_fc_version():
     """Send FreeCAD version to Posthog"""
     global posthog
-    release = FreeCAD.Version()
+
+    if not posthog:
+        return
+
+    release = Version()
 
     posthog.capture(
         distinct_id=posthog_id,
@@ -120,7 +121,11 @@ def posthog_fc_version():
 def posthog_system_info():
     """Send FreeCAD system information to Posthog"""
     global posthog
-    screen = FreeCADGui.getMainWindow().screen()
+
+    if not posthog:
+        return
+
+    screen = Gui.getMainWindow().screen()
     screen_size = screen.availableSize()
     posthog.capture(
         distinct_id=posthog_id,
@@ -136,11 +141,11 @@ def posthog_system_info():
     )
 
 
-def get_preference(path: str, pref_type: str, default: any, transform: callable = lambda x: x):
+def get_preference(path: str, pref_type: str, default: Any, transform: Callable = lambda x: x):
     group = os.path.dirname(path)
     name = os.path.basename(path)
 
-    preference_group = FreeCAD.ParamGet(f"User parameter:{group}")
+    preference_group = ParamGet(f"User parameter:{group}")
     getter = getattr(preference_group, f"Get{pref_type.capitalize()}")
 
     return transform(getter(name, default))
@@ -172,7 +177,7 @@ def ui_panel_preferences(_name: str, overlay_name: str, prefix: str):
     def get_overlay_preferences():
         placements = ["left", "right", "top", "bottom"]
         for placement in placements:
-            overlay_group = FreeCAD.ParamGet(
+            overlay_group = ParamGet(
                 f"User parameter:BaseApp/MainWindow/DockWindows/Overlay{placement.capitalize()}"
             )
             overlay_widgets = overlay_group.GetString("Widgets", "").split(",")
@@ -204,10 +209,13 @@ def posthog_preferences():
     """Send some basic FreeCAD preferences to Posthog"""
     global posthog
 
+    if not posthog:
+        return
+
     preferences = {
         "language": TrackedPreference.string(
             path="BaseApp/Preferences/General/Language",
-            default=FreeCADGui.getLocale(),
+            default=Gui.getLocale(),
         ),
         "theme": TrackedPreference.string(
             path="BaseApp/Preferences/MainWindow/Theme", default="unset"
@@ -295,7 +303,11 @@ def posthog_preferences():
 def posthog_addon_list():
     """Send FreeCAD addon list to Posthog"""
     global posthog
-    home_mod = FreeCAD.getUserAppDataDir() + "Mod"
+
+    if not posthog:
+        return
+
+    home_mod = getUserAppDataDir() + "Mod"
     home_mod = os.path.realpath(home_mod)
     mods = []
     if os.path.isdir(home_mod):
@@ -310,7 +322,7 @@ def posthog_addon_list():
                 # See if there's a metadata file with the proper full name of the mod:
                 package_xml = os.path.join(home_mod, mod_dir, "package.xml")
                 if os.path.exists(package_xml):
-                    metadata = FreeCAD.Metadata(package_xml)
+                    metadata = Metadata(package_xml)
                     if metadata and metadata.Name:
                         mods.append(metadata.Name)
                         continue
@@ -323,9 +335,9 @@ def posthog_addon_list():
 
 
 def posthog_shutdown():
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
+    params = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     enabled = params.GetBool("Enabled", True)
     if enabled and posthog:
-        FreeCAD.Console.PrintLog("Telemetry Addon: Sending FreeCAD shutdown info to Posthog\n")
+        Console.PrintLog("Telemetry Addon: Sending FreeCAD shutdown info to Posthog\n")
         posthog_fc_shutdown()
         posthog.flush()

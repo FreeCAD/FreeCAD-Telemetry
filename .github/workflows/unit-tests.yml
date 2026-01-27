@@ -20,29 +20,47 @@
 #                                                                              #
 ################################################################################
 
-import FreeCAD
 
-# from Sentry import init_sentry, close_sentry_session
-
-
-def setup_sentry():
-    global init_sentry
-    global close_sentry_session
-    params = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
-    dsn = params.GetString("DSN", "unset")
-    if dsn == "unset":
-        dsn = "https://ff3b28f395e6df9ba8fc4c34e03ffdc7@o4508819774963712.ingest.de.sentry.io/4508819779944528"
-        params.SetString("DSN", dsn)
-
-    enabled = params.GetBool("Enable", True)
-    if not enabled:
-        FreeCAD.Console.PrintLog(
-            "Sentry initializing, but FreeCAD Telemetry sending is disabled: no data will be transmitted\n"
-        )
-        dsn = None
-    else:
-        FreeCAD.Console.PrintLog("Sentry initializing. FreeCAD Telemetry sending is active.\n")
-    init_sentry(dsn=dsn)
+name : Unit Tests
 
 
-# setup_sentry()  # Currently not using Sentry
+permissions:
+
+    contents : read
+
+
+on:
+    pull_request:
+
+        branches : [ main ]
+
+    push:
+
+        branches : [ main ]
+
+
+jobs:
+    test:
+
+        runs-on : ubuntu-latest
+
+        steps:
+
+            -   name : Checkout Repository
+                uses : actions/checkout@v6
+
+            -   name : Setup Python
+                uses : actions/setup-python@v6
+                with :
+                    python-version-file : pyproject.toml
+
+            -   name : Setup UV
+                uses : astral-sh/setup-uv@v7
+                with :
+                    version : 0.9.27
+
+            -   name : Install Project
+                run : uv sync --locked
+
+            -   name : Execute Tests
+                run : uv run --module unittest discover Tests
