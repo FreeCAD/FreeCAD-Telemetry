@@ -21,16 +21,14 @@
 ################################################################################
 
 import FreeCAD
-import FreeCADGui
 
-import json
-import os
+from FreeCAD import Gui
+
 import urllib.request
 
 from PySide import QtWidgets, QtCore
 
-import TelemetryPaths
-
+from .Resources import asInterface
 # from Sentry import init_sentry
 
 
@@ -38,9 +36,8 @@ class TelemetryPreferences:
     """A class containing a form element that is inserted as a FreeCAD preference page."""
 
     def __init__(self, _=None):
-        self.form = FreeCADGui.PySideUic.loadUi(
-            os.path.join(TelemetryPaths.panels_path, "preferences.ui")
-        )
+        self.form = Gui.PySideUic.loadUi(asInterface('Preferences'))
+
         # Don't need the next line until we choose to start using Sentry for crash reporting
         # self.form.dsn_line_edit.textEdited.connect(self._dsn_changed)
         if hasattr(self.form.enable_check_box, "checkStateChanged"):
