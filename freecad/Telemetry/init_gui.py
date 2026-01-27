@@ -22,14 +22,14 @@
 
 import freecad.Telemetry.Environment
 
-from FreeCAD import Console , ParamGet , Gui
+from FreeCAD import Console, ParamGet, Gui
 
 from .Preferences import Preferences
-from .Resources import asInterface , asIcon , Paths
+from .Resources import asInterface, asIcon, Paths
 from .PostHog import posthog_shutdown, posthog_launch
 from .PySide import QtWidgets
 
-Gui.addLanguagePath(Paths['Translations'])
+Gui.addLanguagePath(Paths["Translations"])
 Gui.updateLocale()
 
 
@@ -49,13 +49,13 @@ def setup_posthog():
 def setup():
 
     Gui.addPreferencePage(Preferences, "Telemetry")
-    Gui.addIconPath(Paths['Icons'])
+    Gui.addIconPath(Paths["Icons"])
 
     params = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry")
     first_start = params.GetBool("FirstStart", True)
 
     if first_start:
-        dialog = Gui.PySideUic.loadUi(asInterface('Welcome')) # type: ignore
+        dialog = Gui.PySideUic.loadUi(asInterface("Welcome"))  # type: ignore
         dialog.exec()
 
         enabled = dialog.settings_group_box.isChecked()
@@ -81,7 +81,7 @@ def setup():
 class Telemetry(Gui.Workbench):
     """Telemetry is not *really* a workbench, so this class is basically empty."""
 
-    Icon = asIcon('Logo')
+    Icon = asIcon("Logo")
 
     def __init__(self):
         super().__init__()

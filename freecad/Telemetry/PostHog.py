@@ -22,14 +22,13 @@
 
 
 from datetime import datetime
-from FreeCAD import getUserAppDataDir , Metadata , Console , ParamGet , Version , Gui
+from FreeCAD import getUserAppDataDir, Metadata, Console, ParamGet, Version, Gui
 from posthog import Posthog
-from typing import Optional , Callable , Dict , Any
+from typing import Optional, Callable, Dict, Any
 from uuid import uuid4
 
 import platform
 import os
-
 
 posthog: Optional[Posthog] = None
 posthog_id: str = ""

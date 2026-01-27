@@ -21,7 +21,8 @@
 ################################################################################
 
 
-from FreeCAD import Console , ParamGet
+from FreeCAD import Console, ParamGet
+
 # from .Sentry import init_sentry
 
 

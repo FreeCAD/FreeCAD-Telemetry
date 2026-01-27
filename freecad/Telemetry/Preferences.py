@@ -21,19 +21,19 @@
 ################################################################################
 
 
-from FreeCAD import ParamGet , Console , Gui , Qt
+from FreeCAD import ParamGet, Console, Gui, Qt
 
-from urllib.request import HTTPError , Request , urlopen
+from urllib.request import HTTPError, Request, urlopen
 
 from .Resources import asInterface
-from .PySide import QtWidgets , QtCore , QtGui
+from .PySide import QtWidgets, QtCore, QtGui
 
 
 class Preferences:
     """A class containing a form element that is inserted as a FreeCAD preference page."""
 
     def __init__(self, _=None):
-        self.form = Gui.PySideUic.loadUi(asInterface('Preferences')) # type: ignore
+        self.form = Gui.PySideUic.loadUi(asInterface("Preferences"))  # type: ignore
 
         # Don't need the next line until we choose to start using Sentry for crash reporting
         # self.form.dsn_line_edit.textEdited.connect(self._dsn_changed)
@@ -78,7 +78,9 @@ class Preferences:
         self.form.system_check_box.setChecked(system)
         self.form.addons_check_box.setChecked(addon)
         self.form.preferences_check_box.setChecked(preferences)
-        self._enable_check_state_changed(QtCore.Qt.CheckState.Checked if enable else QtCore.Qt.CheckState.Unchecked)
+        self._enable_check_state_changed(
+            QtCore.Qt.CheckState.Checked if enable else QtCore.Qt.CheckState.Unchecked
+        )
 
     def _enable_check_state_changed(self, check_state):
         """Update the enable state of the sub-widgets"""
@@ -131,7 +133,7 @@ class Preferences:
         )
 
     @staticmethod
-    def _remove_user_data() -> tuple[ bool , str ]:
+    def _remove_user_data() -> tuple[bool, str]:
         uuid = ParamGet("User parameter:BaseApp/Preferences/Mod/Telemetry").GetString(
             "PostHogUUID", "unset"
         )
@@ -156,9 +158,7 @@ class Preferences:
                         "Telemetry", "Your user data was successfully removed from the database."
                     )
                 else:
-                    Console.PrintLog(
-                        f"Received a {response.status} response to our request\n"
-                    )
+                    Console.PrintLog(f"Received a {response.status} response to our request\n")
                     Console.PrintError(response.read() + "\n")
                     return False, error_string
         except HTTPError as e:

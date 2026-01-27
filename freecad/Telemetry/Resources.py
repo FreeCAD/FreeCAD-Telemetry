@@ -5,38 +5,34 @@ import freecad.Telemetry as module
 from importlib import resources
 from typing import TypedDict
 
-
-translations = resources.files(module) / 'Resources/Translations'
-interfaces = resources.files(module) / 'Resources/Interfaces'
-icons = resources.files(module) / 'Resources/Icons'
-
-
-class PathsDict ( TypedDict ):
-    Translations : str
-    Icons : str
+translations = resources.files(module) / "Resources/Translations"
+interfaces = resources.files(module) / "Resources/Interfaces"
+icons = resources.files(module) / "Resources/Icons"
 
 
-Paths : PathsDict = {
-    'Translations' : str( translations ) ,
-    'Icons' : str( icons )
-}
+class PathsDict(TypedDict):
+    Translations: str
+    Icons: str
 
 
-def asInterface ( name : str ):
+Paths: PathsDict = {"Translations": str(translations), "Icons": str(icons)}
 
-    file = name + '.ui'
+
+def asInterface(name: str):
+
+    file = name + ".ui"
 
     interface = interfaces / file
 
     with resources.as_file(interface) as path:
-        return str( path )
+        return str(path)
 
 
-def asIcon ( name : str ):
+def asIcon(name: str):
 
-    file = name + '.svg'
+    file = name + ".svg"
 
     icon = icons / file
 
     with resources.as_file(icon) as path:
-        return str( path )
+        return str(path)

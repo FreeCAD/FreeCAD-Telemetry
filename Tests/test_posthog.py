@@ -20,7 +20,7 @@
 #                                                                              #
 ################################################################################
 
-from unittest.mock import MagicMock , patch
+from unittest.mock import MagicMock, patch
 from Tests.mocks import FreeCADMock
 from unittest import TestCase
 from sys import modules
