@@ -57,7 +57,7 @@
 
     <!--[ Icon ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
-    <icon>Resources/icons/telemetryLogo.svg</icon>
+    <icon>freecad/Telemetry/Resources/Icon/Logo.svg</icon>
 
     <!--[ Urls ]―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――-->
 
