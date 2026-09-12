@@ -34,7 +34,10 @@ import json
 import os
 import shutil
 import stat
-import subprocess
+
+# Audited: subprocess is only used to run the Qt lupdate/lrelease tools with fixed argument lists
+# and no shell (added nosec B404)
+import subprocess  # nosec B404
 import sys
 import tempfile
 import time
@@ -85,7 +88,8 @@ class CrowdinUpdater:
             data = json.dumps(data).encode("utf-8")
 
         request = Request(url, headers=headers, method=method, data=data)
-        request_result = urlopen(request)
+        # Audited: every URL is built on the hardcoded HTTPS CROWDIN_API_URL (added nosec B310)
+        request_result = urlopen(request)  # nosec B310
         if request_result.getcode() >= 300:
             print(f"Failed to make API request {url}: return code {request_result.getcode()}")
             raise Exception("Failed to make API request")
@@ -135,7 +139,11 @@ class CrowdinUpdater:
     def download(self, build_id):
         filename = f"{self.project_identifier}.zip"
         response = self._make_project_api_req(f"/translations/builds/{build_id}/download")
-        urlretrieve(response["url"], filename)
+        download_url = response["url"]
+        if not download_url.startswith("https://"):
+            raise Exception(f"Refusing to download from non-HTTPS URL {download_url}")
+        # Audited: only HTTPS URLs reach this point (added nosec B310)
+        urlretrieve(download_url, filename)  # nosec B310
         print("download of " + filename + " complete")
 
     def build(self):
@@ -185,7 +193,8 @@ def process_single_translation_file(source_path: str, target_path: str):
 
     print("Generating qm file for", basename, "...")
     try:
-        subprocess.run(
+        # Audited: fixed arguments, no shell; lrelease is expected on PATH (added nosec B603, B607)
+        subprocess.run(  # nosec B603 B607
             [
                 "lrelease",
                 new_path,
@@ -348,7 +357,8 @@ if __name__ == "__main__":
         "-ts",
         os.path.join(TS_FILE_PATH, CROWDIN_FILE_NAME),
     ]
-    result = subprocess.run(
+    # Audited: fixed arguments, no shell; lupdate is expected on PATH (added nosec B603)
+    result = subprocess.run(  # nosec B603
         args,
         timeout=30,
         check=True,
