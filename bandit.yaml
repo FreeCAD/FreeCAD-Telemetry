@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+# SPDX-FileNotice: Part of the Telemetry addon.
+
+# Configuration for Bandit static security analysis. Run locally with:
+#   bandit -c bandit.yaml -r .
+#
+# The settings mirror the ones used by the FreeCAD addon quality report
+# (https://github.com/FreeCAD/Addon-Reports), so a clean run here means a clean
+# entry there. Any finding must either be fixed or carry an audited "nosec"
+# marker explaining why it is safe.
+#
+# B101 (assert_used) and B110 (try_except_pass) are informational style checks
+# rather than security defects, and the addon report skips them as well.
+#
+# Bandit treats each exclude entry as a plain substring of the file path, so the
+# patterns are anchored with path separators.
+
+exclude_dirs:
+  - "*/.venv/*"
+
+skips:
+  - B101
+  - B110

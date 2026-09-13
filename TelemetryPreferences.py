@@ -156,7 +156,8 @@ class TelemetryPreferences:
         url = f"https://www.freecad.org/deletetelemetry.php?person_id={uuid}"
         req = urllib.request.Request(url, method="DELETE")
         try:
-            with urllib.request.urlopen(req) as response:
+            # Audited: the URL is a hardcoded HTTPS endpoint (added nosec B310)
+            with urllib.request.urlopen(req) as response:  # nosec B310
                 if 200 <= response.status < 300:
                     return True, FreeCAD.Qt.translate(
                         "Telemetry", "Your user data was successfully removed from the database."
